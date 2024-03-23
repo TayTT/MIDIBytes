@@ -1,4 +1,4 @@
-11.03 - 17.03 - Przegląd literatury, przegląd podobnych implementacji, przygotowanie danych:
+**11.03 - 17.03 - Przegląd literatury, przegląd podobnych implementacji, przygotowanie danych:**
 
 W ramach przęglądu istniejących rozwiązań znaleziono narzędzia:
 * MuseAI (https://github.com/webpolis/musai) 
@@ -18,11 +18,11 @@ Znalezione datasety:
 * Meta-MIDI Dataset (https://archives.ismir.net/ismir2021/paper/000022.pdf)
 Nie podjęto jeszcze decyzji, który dataset będzie wykorzystywany. Skłaniamy się ku Maestro i Meta-MIDI Dataset.
 
-18.03 - 24.03 - implementacja technik tokenizacji, testowanie
+**18.03 - 24.03 - implementacja technik tokenizacji, testowanie**
 * stworzenie pliku do odczytywanie plików MIDI
 * stworzenie pliku odpowiedzialnego za wybór tokenizacji i parametrów tokenizacji
 * testowanie stworzonych plików
 
 Obserwacje: po konwersji na plik MIDI po tokenizacji widać, że zaszła kompresja:
-PRZED: Score(ttype=Tick, *tpq=384*, begin=0, *end=447165*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
-PO: Score(ttype=Tick, *tpq=8*, begin=0, *end=9302*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
+PRZED: Score(ttype=Tick, **tpq=384**, begin=0, *end=447165*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
+PO: Score(ttype=Tick, **tpq=8**, begin=0, *end=9302*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)

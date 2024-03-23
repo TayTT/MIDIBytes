@@ -18,3 +18,8 @@ Znalezione datasety:
 * Meta-MIDI Dataset (https://archives.ismir.net/ismir2021/paper/000022.pdf)
 Nie podjęto jeszcze decyzji, który dataset będzie wykorzystywany. Skłaniamy się ku Maestro i Meta-MIDI Dataset.
 
+18.03 - 24.03 - implementacja technik tokenizacji, testowanie
+* stworzenie pliku do odczytywanie plików MIDI
+* stworzenie pliku odpowiedzialnego za wybór tokenizacji i parametrów tokenizacji
+* testowanie stworzonych plików
+

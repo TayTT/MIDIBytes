@@ -23,3 +23,6 @@ Nie podjęto jeszcze decyzji, który dataset będzie wykorzystywany. Skłaniamy 
 * stworzenie pliku odpowiedzialnego za wybór tokenizacji i parametrów tokenizacji
 * testowanie stworzonych plików
 
+Obserwacje: po konwersji na plik MIDI po tokenizacji widać, że zaszła kompresja:
+PRZED: Score(ttype=Tick, *tpq=384*, begin=0, *end=447165*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
+PO: Score(ttype=Tick, *tpq=8*, begin=0, *end=9302*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)

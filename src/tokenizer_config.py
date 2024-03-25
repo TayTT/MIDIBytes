@@ -1,5 +1,7 @@
 from pathlib import Path
 from config import TOKENS_PATH
+from config import DEFAULT_CONFIG
+from config import DEFAULT_TOKENIZER
 from miditok import (
     REMI, 
     MIDILike,
@@ -13,19 +15,31 @@ from miditok import (
     #TokSequence
     )
 import mido
+'''
+Class has two key components: tokenizer and configuration and some methods:
+ # set_config(...)
+   lets you set given parameters if you want to change them from the default ones
+ # choose_tokenizer(...)
+   lets you choose the tokenizer with given configuration
+ # generate_tokens(...)
+   lets you genetate tokens from MIDI files. You can choose to use BPE option.
+   Method saves the tokenization parametres in folder under TOKENS_PATH. Returns tokens.
+ # tokens_to_MIDI(...)
+   lets you generate MIDI file from a set of tokens. Returns MIDI file
+'''
 
 class TokenizerConfigBuiler:
     def __init__(self):
-        self.tokenizer = None
-        self.configuration: TokenizerConfig = None
+        self.tokenizer: str = DEFAULT_TOKENIZER
+        self.configuration: TokenizerConfig = TokenizerConfig(DEFAULT_CONFIG)
         
-    def set_config(self, pitch_range: tuple[int, int] = (21, 109),
-        num_velocities: int = 32,
-        use_chords: bool = False,
-        use_rests: bool = False,
-        use_tempos: bool = False,
-        use_time_signatures: bool = False,
-        use_sustain_pedals: bool = False):
+    def set_config(self, pitch_range: tuple[int, int],
+        num_velocities: int,
+        use_chords: bool,
+        use_rests: bool,
+        use_tempos: bool,
+        use_time_signatures: bool,
+        use_sustain_pedals: bool):
     
         self.configuration = TokenizerConfig(
             pitch_range = pitch_range,

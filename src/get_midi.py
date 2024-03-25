@@ -1,6 +1,9 @@
 from pathlib import Path
 from symusic import Score
 
+'''
+Reads MIDI files from given path
+'''
 
 class MidiReader:
     def __init__(self, file_paths) -> None:

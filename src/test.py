@@ -3,7 +3,10 @@ from tokenizer_config import TokenizerConfigBuiler
 # from src.tokenizer_option import TokenizerOption
 from get_midi import MidiReader
 import mido
+'''
+Test file for the get_midi, tokenizer_config files
 
+'''
 
 #get midi files
 print(EXAMPLE_DIR)
@@ -18,5 +21,6 @@ tokenizer.set_config(use_tempos= True)
 tokenizer.choose_tokenizer("REMI")
 tokens = tokenizer.generate_tokens(midi_list)
 
+#convert tokens back to MIDI and see differences
 back_to_MIDI = tokenizer.tokens_to_MIDI(tokens)
 print(back_to_MIDI)

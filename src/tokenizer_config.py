@@ -15,6 +15,9 @@ from miditok import (
     #TokSequence
     )
 
+from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
+from torch.utils.data import DataLoader
+
 '''
 Class has two key components: tokenizer and configuration and some methods:
  # set_config(...)
@@ -82,10 +85,31 @@ class TokenizerConfigBuiler:
             self.tokenizer.learn_bpe(vocab_size=30000, files_paths = midi_files)
             
         self.tokenizer.save_params(Path(TOKENS_PATH, "tokenizer.json"))
-        print(midi_files)
-        tokens = self.tokenizer(midi_files)
+        # print(midi_files)
+        # tokens = self.tokenizer(midi_files)
         
-        return tokens
+        
+        # dataset_chunks_dir = TOKENS_PATH
+        
+        # split_midis_for_training(
+        # files_paths=midi_files,
+        # tokenizer=self.tokenizer,
+        # save_dir=dataset_chunks_dir,
+        # max_seq_len=1024,
+        # )
+        
+        #Splitting MIDI files
+        dataset = DatasetTok(
+            files_paths=midi_files,
+            tokenizer=self.tokenizer,
+            min_seq_len = 50,
+            max_seq_len=1024,
+        )
+        
+        collator = DataCollator(self.tokenizer["PAD_None"])
+        dataloader = DataLoader(dataset, batch_size=64, collate_fn=collator)    
+
+        return dataloader
     
     def tokens_to_MIDI(self, tokens):
         converted_back_midi = self.tokenizer(tokens)

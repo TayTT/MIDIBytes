@@ -13,7 +13,8 @@ Test file for the get_midi, tokenizer_config files
 midi = MidiReader(EXAMPLE_DIR)
 midi_list = midi.read_midi_files()
 
-# print(midi_list)
+for i in range(len(midi_list)):
+    print(midi_list[i])
 
 #Configure and choose tokenizer:
 tokenizer = TokenizerConfigBuiler()

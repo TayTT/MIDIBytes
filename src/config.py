@@ -9,7 +9,7 @@ MIDI_PATH = os.path.join(DATA_DIR, "midi")
 TOKENS_PATH = os.path.join(DATA_DIR, "tokens")
 
 DEFAULT_CONFIG = {
-        'pitch_range': (21, 109), 
+        'pitch_range': tuple[21, 109], 
         'num_velocities': 32,  
         'use_chords': False,  
         'use_rests': False,  

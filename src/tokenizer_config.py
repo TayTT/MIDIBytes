@@ -31,15 +31,22 @@ Class has two key components: tokenizer and configuration and some methods:
 class TokenizerConfigBuiler:
     def __init__(self):
         self.tokenizer: str = DEFAULT_TOKENIZER
-        self.configuration: TokenizerConfig = TokenizerConfig(DEFAULT_CONFIG)
+        self.configuration: TokenizerConfig = TokenizerConfig(
+            pitch_range = (21, 109), 
+            num_velocities = 32,  
+            use_chords = False,  
+            use_rests = False,  
+            use_tempos = False, 
+            use_time_signatures = False,  
+            use_sustain_pedals = False)
         
-    def set_config(self, pitch_range: tuple[int, int],
-        num_velocities: int,
-        use_chords: bool,
-        use_rests: bool,
-        use_tempos: bool,
-        use_time_signatures: bool,
-        use_sustain_pedals: bool):
+    def set_config(self, pitch_range: tuple[int, int] = (21, 109),
+        num_velocities: int = 32,
+        use_chords: bool = False,
+        use_rests: bool = False,
+        use_tempos: bool = False,
+        use_time_signatures: bool = False,
+        use_sustain_pedals: bool = False):
     
         self.configuration = TokenizerConfig(
             pitch_range = pitch_range,

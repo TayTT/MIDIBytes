@@ -20,7 +20,7 @@ DEFAULT_CONFIG = {
 
 DEFAULT_TOKENIZER = 'REMI'
 
-EXAMPLE_DIR = os.path.join(DATA_DIR, "midi\\2018\\MIDI-Unprocessed_Chamber2_MID--AUDIO_09_R3_2018_wav--1.midi")
+EXAMPLE_DIR = os.path.join(DATA_DIR, "midi\\2018")
 EXAMPLE_TOKCONFIG = {
     "num_velocities": 16, 
     "use_chords": True, 

@@ -10,8 +10,9 @@ class MidiReader:
         self.file_paths = file_paths
         
     def read_midi_files(self):
-        # midi_paths = list(Path("path", "to", "midis").glob("**/*.mid"))
-        return Score(self.file_paths)
+        midi_paths = list(Path(self.file_paths).glob("./*.mid"))
+        return midi_paths
+        #return Score(self.file_paths)
     
 # # Loads a midi, converts to tokens, and back to a MIDI
 # midi = Score("path/to/your_midi.mid")

@@ -14,7 +14,7 @@ from miditok import (
     TokenizerConfig,
     #TokSequence
     )
-import mido
+
 '''
 Class has two key components: tokenizer and configuration and some methods:
  # set_config(...)

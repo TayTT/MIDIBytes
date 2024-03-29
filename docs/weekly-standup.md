@@ -26,3 +26,12 @@ Nie podjęto jeszcze decyzji, który dataset będzie wykorzystywany. Skłaniamy 
 Obserwacje: po konwersji na plik MIDI po tokenizacji widać, że zaszła kompresja:
 PRZED: Score(ttype=Tick, **tpq=384**, begin=0, *end=447165*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
 PO: Score(ttype=Tick, **tpq=8**, begin=0, *end=9302*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
+
+**25.03 - 31.03 - Stworzenie pierwszego modelu, szkolenie modelu, ocena szkolenia,
+konsultacja wyników z prowadzącym **
+* rozpoczęto zadania zaplanowane na przyszłe iteracje po reewaluacji planu rozwoju projektu - skonfigurowano 
+ konteneryzację przy pomocy Dockera, zainicjalizowano frontend
+* stworzenie modelu zajmie prawdopodbniej więcej czasu, niż zakładano, przerwa świąteczna jest potrzebna tydzień wcześniej, 
+pliki MIDI trzeba przygotować przed przekazaniem ich modelowis
+
+

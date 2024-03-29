@@ -31,7 +31,5 @@ PO: Score(ttype=Tick, **tpq=8**, begin=0, *end=9302*, tracks=1, notes=4991, time
 konsultacja wyników z prowadzącym **
 * rozpoczęto zadania zaplanowane na przyszłe iteracje po reewaluacji planu rozwoju projektu - skonfigurowano 
  konteneryzację przy pomocy Dockera, zainicjalizowano frontend
-* stworzenie modelu zajmie prawdopodbniej więcej czasu, niż zakładano, przerwa świąteczna jest potrzebna tydzień wcześniej, 
-pliki MIDI trzeba przygotować przed przekazaniem ich modelowis
-
+* stworzenie modelu zajmie prawdopodbniej więcej czasu, niż zakładano, przerwa świąteczna jest potrzebna tydzień wcześniej
 

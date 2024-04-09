@@ -1,4 +1,6 @@
 from pathlib import Path
+# from mido import MidiFile
+from midi2audio import FluidSynth
 from symusic import Score
 
 '''
@@ -13,7 +15,11 @@ class MidiReader:
         midi_paths = list(Path(self.file_paths).glob("./*.midi"))
         return midi_paths
         #return Score(self.file_paths)
-    
+
+    def play_midi(self, midi: str):
+        FluidSynth().play_midi(midi)
+
+
 # # Loads a midi, converts to tokens, and back to a MIDI
 # midi = Score("path/to/your_midi.mid")
 # tokens = tokenizer(midi)  # calling the tokenizer will automatically detect MIDIs, paths and tokens

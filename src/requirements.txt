@@ -1,5 +1,7 @@
 streamlit
 miditok==3.0.1
+mido
+midi2audio
 pathlib
 symusic
 torch==2.2.1

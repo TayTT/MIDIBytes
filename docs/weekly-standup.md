@@ -28,8 +28,12 @@ PRZED: Score(ttype=Tick, **tpq=384**, begin=0, *end=447165*, tracks=1, notes=499
 PO: Score(ttype=Tick, **tpq=8**, begin=0, *end=9302*, tracks=1, notes=4991, time_sig=1, key_sig=0, markers=0, lyrics=0)
 
 **25.03 - 31.03 - Stworzenie pierwszego modelu, szkolenie modelu, ocena szkolenia,
-konsultacja wyników z prowadzącym **
+konsultacja wyników z prowadzącym**
 * rozpoczęto zadania zaplanowane na przyszłe iteracje po reewaluacji planu rozwoju projektu - skonfigurowano 
  konteneryzację przy pomocy Dockera, zainicjalizowano frontend
 * stworzenie modelu zajmie prawdopodbniej więcej czasu, niż zakładano, przerwa świąteczna jest potrzebna tydzień wcześniej
+
+**01.04 - 07.04**
+* Po części przerwa swiąteczna, pierwsze koncepcje frontendu, konsultacja z prowadzącym odnośnie sposobu generacji muzyki -> konieczna zmiana podejścia i pierwsze próby korzystania z nanoGPT
+* Dodanie odtwarzania muzyki z midi zakończone niepowodzeniem -> modyfikacja pipeline'u pracy z dockerem
 

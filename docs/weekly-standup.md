@@ -37,3 +37,11 @@ konsultacja wyników z prowadzącym**
 * Po części przerwa swiąteczna, pierwsze koncepcje frontendu, konsultacja z prowadzącym odnośnie sposobu generacji muzyki -> konieczna zmiana podejścia i pierwsze próby korzystania z nanoGPT
 * Dodanie odtwarzania muzyki z midi zakończone niepowodzeniem -> modyfikacja pipeline'u pracy z dockerem
 
+**15.04 - 21.04**
+* przygotowanie plików do zapisu plików MIDI po tokenizacji
+
+**22.04 - 28.04**
+* analiza wpływu tokenizatorów na pliki MIDI
+<img src="plots/end_time.png" alt="Wykres end-time dla plików midi dla różnych tokenizerów">
+<img src="plots/file_size.png" alt="Wykres rozmiaru plików midi dla różnych tokenizerów">
+<img src="plots/tempo.png" alt="Wykres tempa dla różnych tokenizerów">

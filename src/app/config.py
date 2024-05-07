@@ -3,9 +3,17 @@ import os
 Generating the projects path names and default configuration for tokenizers
 '''
 
-DATA_DIR = os.path.join("../data")
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "."))
+DATA_DIR = os.path.join(ROOT_DIR, "..//data")
 MIDI_PATH = os.path.join(DATA_DIR, "midi")
 TOKENS_PATH = os.path.join(DATA_DIR, "tokens")
+MIDI_FROM_TOKENS_PATH = os.path.join(DATA_DIR, "midi_from_tokens")
+EXAMPLE_DIR = os.path.join(MIDI_PATH, "2018")
+
+#for compare tests --- NEEDS TO BE DELETED
+#COMPARE_DIR = os.path.join(ROOT_DIR, ".\\compare")
+#MIDI_FROM_TOKENS_PATH = os.path.join(COMPARE_DIR, "tokenized")
+#EXAMPLE_DIR = os.path.join(COMPARE_DIR, "original")
 
 DEFAULT_CONFIG = {
         'pitch_range': tuple[21, 109], 
@@ -19,7 +27,6 @@ DEFAULT_CONFIG = {
 
 DEFAULT_TOKENIZER = 'REMI'
 
-EXAMPLE_DIR = os.path.join(MIDI_PATH, "2018")
 EXAMPLE_TOKCONFIG = {
     "num_velocities": 16, 
     "use_chords": True, 

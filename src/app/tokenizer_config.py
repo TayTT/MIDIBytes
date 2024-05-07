@@ -1,22 +1,16 @@
+import os
 from pathlib import Path
+from symusic import Score
+import miditok
+from pydub import AudioSegment
 from config import TOKENS_PATH
+from config import MIDI_FROM_TOKENS_PATH
 from config import DEFAULT_CONFIG
 from config import DEFAULT_TOKENIZER
-from miditok import (
-    REMI, 
-    MIDILike,
-    TSD,
-    Structured,
-    CPWord,
-    MuMIDI,
-    MMM,
-    Octuple,
-    TokenizerConfig,
-    #TokSequence
-    )
-
-from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
+from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MIDITokenizer, TokSequence
+# from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
 from torch.utils.data import DataLoader
+
 
 '''
 Class has two key components: tokenizer and configuration and some methods:
@@ -33,7 +27,7 @@ Class has two key components: tokenizer and configuration and some methods:
 
 class TokenizerConfigBuiler:
     def __init__(self):
-        self.tokenizer: str = DEFAULT_TOKENIZER
+        self.tokenizer: MIDITokenizer = DEFAULT_TOKENIZER
         self.configuration: TokenizerConfig = TokenizerConfig(
             pitch_range = (21, 109), 
             num_velocities = 32,  
@@ -80,14 +74,17 @@ class TokenizerConfigBuiler:
         else:
             raise ValueError("Unknown tokenizer")  
     
-    def generate_tokens(self, midi_files: list, BPE: bool = False):
-        if BPE:  
-            self.tokenizer.learn_bpe(vocab_size=30000, files_paths = midi_files)
-            
-        self.tokenizer.save_params(Path(TOKENS_PATH, "tokenizer.json"))
-        # print(midi_files)
-        # tokens = self.tokenizer(midi_files)
+    def generate_tokens(self, midi_scores: list, BPE: bool = False) -> TokSequence:
         
+        tokens = []
+        for i, midi_file in enumerate(midi_scores):
+            token = self.tokenizer.midi_to_tokens(midi_file, apply_bpe=BPE)
+            self.tokenizer.save_params(Path(TOKENS_PATH, "tokenizer.json"))
+            tokens.append(token)
+            self.tokenizer.save_tokens(token, path=Path(TOKENS_PATH,  str(i)+".json"))
+
+        
+        return tokens # TokSequence
         
         # dataset_chunks_dir = TOKENS_PATH
         
@@ -97,21 +94,48 @@ class TokenizerConfigBuiler:
         # save_dir=dataset_chunks_dir,
         # max_seq_len=1024,
         # )
-        
+    
+    def make_data_loader(self, midi_files: list):
         #Splitting MIDI files
-        dataset = DatasetTok(
+        dataset = miditok.pytorch_data.DatasetTok(
             files_paths=midi_files,
             tokenizer=self.tokenizer,
             min_seq_len = 50,
             max_seq_len=1024,
         )
         
-        collator = DataCollator(self.tokenizer["PAD_None"])
+        collator = miditok.pytorch_data.DataCollator(self.tokenizer["PAD_None"])
         dataloader = DataLoader(dataset, batch_size=64, collate_fn=collator)    
 
         return dataloader
     
-    def tokens_to_MIDI(self, tokens):
-        converted_back_midi = self.tokenizer(tokens)
-        # converted_back_midi.save(TOKENS_PATH)
-        return converted_back_midi
+    def tokens_to_MIDI(self, tokens: list[TokSequence] | TokSequence, name_file = None):
+
+        midi_from_tokens_path = Path(MIDI_FROM_TOKENS_PATH).resolve()
+
+        # Teraz możesz bezpiecznie zapisać plik MIDI
+        for i, token in enumerate(tokens):
+            midi_file = self.tokenizer.tokens_to_midi(token)
+            if name_file == None:
+                midi_file.dump_midi(midi_from_tokens_path / f"{i}.mid")
+            else:
+                midi_file.dump_midi(midi_from_tokens_path / f"{name_file}.mid")
+        
+        print("Tokens converted to MIDI")
+
+    def midi_to_mp3(midi_file, mp3_name):
+        # Convert MIDI to WAV using fluidsynth
+        wav_file = mp3_name.replace('.mp3', '.wav')
+        os.system(f'fluidsynth -ni ../data/GeneralUser GS 1.471/GeneralUser GS v1.471.sf2 {midi_file} -F {wav_file} -r 44100')
+        # Convert WAV to MP3 using pydub
+        audio = AudioSegment.from_wav(wav_file)
+        # audio.export("../../data/mp3/"+mp3_name, format='mp3')
+        mp3_directory = "../data/mp3/"
+        if not os.path.exists(mp3_directory):
+            os.makedirs(mp3_directory)
+
+        # Export MP3 file
+        mp3_path = os.path.join(mp3_directory, mp3_name)
+        audio.export(mp3_path, format='mp3')
+        # Remove temporary WAV file
+        os.remove(wav_file)

@@ -1,7 +1,7 @@
 from config import EXAMPLE_DIR
 from tokenizer_config import TokenizerConfigBuiler
 # from src.tokenizer_option import TokenizerOption
-from get_midi import MidiReader as mr
+from get_midi import MidiReader
 # import mido
 '''
 Test file for the get_midi, tokenizer_config files
@@ -10,8 +10,8 @@ Test file for the get_midi, tokenizer_config files
 
 #get midi files
 
-midi = mr(EXAMPLE_DIR)
-midi_list = midi.read_midi_files()
+midi = MidiReader(EXAMPLE_DIR)
+midi_list, midi_scores = midi.read_midi_files()
 
 # for i in range(len(midi_list)):
 #     print(midi_list[i])
@@ -20,9 +20,9 @@ midi_list = midi.read_midi_files()
 tokenizer = TokenizerConfigBuiler()
 tokenizer.set_config(use_tempos= True)
 tokenizer.choose_tokenizer("REMI")
-tokens = tokenizer.generate_tokens(midi_list)
-mr.play_midi(midi_list[1])
+tokens = tokenizer.generate_tokens(midi_scores)
+# dataloader = tokenizer.make_data_loader(midi_files=midi_list)
+print(tokens)
 
 #convert tokens back to MIDI and see differences
-# back_to_MIDI = tokenizer.tokens_to_MIDI(tokens)
-
+back_to_MIDI = tokenizer.tokens_to_MIDI(tokens)

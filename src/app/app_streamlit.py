@@ -47,6 +47,7 @@ def main():
   if container.button("Go!"):
     container.subheader("Step 3")
     get_output(selected_sample, selected_tokenizer)
+    st.audio("purr.mp3", format="audio/mpeg", loop=True)
       
 
 if __name__ == "__main__":

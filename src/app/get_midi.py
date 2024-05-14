@@ -10,7 +10,7 @@ class MidiReader:
         self.file_paths = file_paths
         
     def read_midi_files(self):
-        midi_paths = list(Path(self.file_paths).glob("./*.midi"))
+        midi_paths = list(Path(self.file_paths).glob("./*/*.midi"))
         scores = []
         
         for midi_path in midi_paths:

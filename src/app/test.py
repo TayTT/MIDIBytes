@@ -1,16 +1,15 @@
-from config import EXAMPLE_DIR
+from config import TOKENS_PATH, DATA_DIR, MIDI_PATH
 from tokenizer_config import TokenizerConfigBuiler
-# from src.tokenizer_option import TokenizerOption
 from get_midi import MidiReader
-# import mido
+
 '''
 Test file for the get_midi, tokenizer_config files
 
 '''
 
 #get midi files
-
-midi = MidiReader(EXAMPLE_DIR)
+print("Reading midi files . . .")
+midi = MidiReader(MIDI_PATH)
 midi_list, midi_scores = midi.read_midi_files()
 
 # for i in range(len(midi_list)):
@@ -18,7 +17,7 @@ midi_list, midi_scores = midi.read_midi_files()
 
 #Configure and choose tokenizer:
 tokenizer = TokenizerConfigBuiler()
-tokenizer.set_config(use_tempos= True)
+tokenizer.set_config(use_tempos=True)
 tokenizer.choose_tokenizer("REMI")
 tokens = tokenizer.generate_tokens(midi_scores)
 # dataloader = tokenizer.make_data_loader(midi_files=midi_list)

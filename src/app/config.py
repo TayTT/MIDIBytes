@@ -4,7 +4,7 @@ Generating the projects path names and default configuration for tokenizers
 '''
 
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "."))
-DATA_DIR = os.path.join(ROOT_DIR, "..//data")
+DATA_DIR = os.path.join(ROOT_DIR, "../../data")
 MIDI_PATH = os.path.join(DATA_DIR, "midi")
 TOKENS_PATH = os.path.join(DATA_DIR, "tokens")
 MIDI_FROM_TOKENS_PATH = os.path.join(DATA_DIR, "midi_from_tokens")

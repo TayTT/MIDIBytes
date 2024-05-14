@@ -10,6 +10,7 @@ from config import DEFAULT_TOKENIZER
 from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MIDITokenizer, TokSequence
 # from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
 from torch.utils.data import DataLoader
+import json
 
 
 '''
@@ -74,14 +75,14 @@ class TokenizerConfigBuiler:
         else:
             raise ValueError("Unknown tokenizer")  
     
-    def generate_tokens(self, midi_scores: list, BPE: bool = False) -> TokSequence:
+    def generate_tokens(self, midi_scores: list, tokens_path: Path, BPE: bool = False) -> TokSequence:
         
         tokens = []
         for i, midi_file in enumerate(midi_scores):
             token = self.tokenizer.midi_to_tokens(midi_file, apply_bpe=BPE)
-            self.tokenizer.save_params(Path(TOKENS_PATH, "tokenizer.json"))
+            self.tokenizer.save_params(Path(tokens_path, "tokenizer.json"))
             tokens.append(token)
-            self.tokenizer.save_tokens(token, path=Path(TOKENS_PATH,  str(i)+".json"))
+            self.tokenizer.save_tokens(token, path=Path(tokens_path,  str(i)+".json"))
 
         
         return tokens # TokSequence
@@ -139,3 +140,18 @@ class TokenizerConfigBuiler:
         audio.export(mp3_path, format='mp3')
         # Remove temporary WAV file
         os.remove(wav_file)
+
+    def read_ids(self, file_path: Path) -> str:
+        try:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                ids_column = data.get('ids')
+                ids_column = [i for sublist in ids_column for i in sublist]
+                ids = ",".join(str(i) for i in ids_column)
+                return ids
+        except FileNotFoundError:
+            print("Couldn't find the file.")
+            return None
+        except json.JSONDecodeError:
+            print("Incorrect format.")
+            return None

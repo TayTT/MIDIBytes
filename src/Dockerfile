@@ -4,7 +4,7 @@ COPY . /src/
 
 WORKDIR /src
 
-RUN apt-get update && apt-get upgrade -y && apt-get install ffmpeg -y && apt-get install wget -y && apt-get install zip unzip -y
+RUN apt update && apt upgrade -y && apt install ffmpeg -y && apt install wget -y && apt install unzip -y && apt install fluidsync -y
 
 RUN wget "https://storage.googleapis.com/magentadata/datasets/maestro/v3.0.0/maestro-v3.0.0-midi.zip"
 
@@ -13,10 +13,6 @@ RUN unzip -q maestro-v3.0.0-midi.zip && mkdir -p data && mv maestro-v3.0.0 data/
 RUN rm maestro-v3.0.0-midi.zip
 
 RUN pip3 install -r requirements.txt
-
-RUN mkdir -p data/tokens
-
-RUN mkdir -p data/midi_from_tokens
 
 WORKDIR /src/app
 

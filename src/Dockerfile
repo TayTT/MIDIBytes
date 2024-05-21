@@ -4,7 +4,7 @@ COPY . /src/
 
 WORKDIR /src
 
-RUN apt update && apt upgrade -y && apt install ffmpeg -y && apt install wget -y && apt install unzip -y && apt install fluidsync -y
+RUN apt update && apt upgrade -y && apt install ffmpeg -y && apt install wget -y && apt install unzip -y && apt install fluidsynth -y
 
 RUN wget "https://storage.googleapis.com/magentadata/datasets/maestro/v3.0.0/maestro-v3.0.0-midi.zip"
 

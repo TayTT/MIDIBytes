@@ -1,9 +1,11 @@
 # **Opis badań**
 **Wpływ tokenizacji na pliki MIDI**:
 Pobrano 17 plików MIDI dla których obliczono trzy parametry:
+
 * end time - za pomocą biblioteki prettyMIDI
 * estimated tempo - za pomocą biblioteki prettyMIDI
 * file size - funkcja os getsize
+
 Następnie dokonano tokenizacji tych plików za pomocą tokenizatorów: "REMI", "MIDILike", "TSD", "Structured", "CPWord", "MuMIDI", "MMM", "Octuple".
 Otrzymane dane przedstawiono na wykresach gdzie na osi x oznaczane były wartości parametrów dla pliku oryginalnego, a na osi y wartości dla pliku po tokenizacji danym tokenizatorem. Oczekiwanym efektem byłoby uzyskanie funkcji f(x) = x - oznacza to, że dany parametr nie zmienił się podczas tokenizacji. 
 
@@ -11,12 +13,13 @@ W celu zbadania jaka funkcja aproksymuje otrzymane punkty skorzystano z aproksym
 
 $a_1 \cdot x^2 + a_2 \cdot x + a_3$
 
-W najlepszym przypadku otrzymane współczynniki $a_1$ i $a_3$ powinnny być jak najbliższe wartości 0, a wartość $a_2$ przybliżona wartości 1. 
+W najlepszym przypadku otrzymane współczynniki $a_1$ i $a_3$ powinnny być jak najbliższe wartości 0, a wartość $a_2$ przybliżona wartości 1. Wniosek jest wtedy taki, że tokenizator nie wpłynął na jakość utworu i na jego wybrane elementy.
 
 # **Wyniki**
 W folderze plots wstawione zostały wykresy z powyżej opisanej analizy. Poniżej przedstawiono wyniki liczbowe dla wartości $a_1$, $a_2$ i $a_3$. W folderze analysis znajduje się plik wykonawczy tokenizer_compare.py.
 
 **Wyniki dla parametru end time**
+
 | Tokenizator  | Współczynnik 1        | Współczynnik 2        | Współczynnik 3        |
 |--------------|-----------------------|-----------------------|-----------------------|
 | REMI         | -7.18481740e-07       | 9.90730898e-01        | -9.85569766e-01       |
@@ -29,6 +32,7 @@ W folderze plots wstawione zostały wykresy z powyżej opisanej analizy. Poniże
 | Octuple      | -7.18481740e-07       | 9.90730898e-01        | -9.85569766e-01       |
 
 **Wyniki dla parametru estimated tempo**
+
 | Tokenizator  | Współczynnik 1        | Współczynnik 2        | Współczynnik 3        |
 |--------------|-----------------------|-----------------------|-----------------------|
 | REMI         | 1.60749243e-02        | -5.92349227e+00       | 7.49900167e+02        |

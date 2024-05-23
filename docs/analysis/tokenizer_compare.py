@@ -4,7 +4,6 @@ from tokenizer_config import TokenizerConfigBuiler
 from get_midi import MidiReader
 import numpy as np
 import matplotlib.pyplot as plt
-from plot import *
 from config import MIDI_FROM_TOKENS_PATH
 
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "."))

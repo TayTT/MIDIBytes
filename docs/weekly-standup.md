@@ -45,3 +45,12 @@ konsultacja wyników z prowadzącym**
 <img src="plots/end_time.png" alt="Wykres end-time dla plików midi dla różnych tokenizerów">
 <img src="plots/file_size.png" alt="Wykres rozmiaru plików midi dla różnych tokenizerów">
 <img src="plots/tempo.png" alt="Wykres tempa dla różnych tokenizerów">
+
+**29.04 - 19.05**
+* Uruchamianie nanoGPT, reformatowanie plików
+* Zapoznawanie się ze środowiskiem Huggingface jako alternatywa
+* Dogłębniejsza analiza wpływu tokenizatorów na pliki MIDI, opracowanie metryk ewaluacyjnych tokenizatorów
+
+**20.05 - 26.05**
+* Zmuszenie nanoGPT do trenowania na customowym datasecie
+* Zmuszenie Huggingface do trenowania na customowym datasecie

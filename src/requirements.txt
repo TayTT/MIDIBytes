@@ -1,8 +1,0 @@
-streamlit
-miditok==3.0.1
-midi2audio==0.1.1
-pathlib==1.0.1
-symusic==0.4.2
-torch==2.2.1
-pydub==0.25.1
-fluidsynth==0.2

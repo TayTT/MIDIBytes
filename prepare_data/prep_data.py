@@ -1,5 +1,5 @@
-from config import TOKENS_PATH, DATA_DIR, MIDI_PATH
-from tokenizer_config import TokenizerConfigBuiler
+from config import TOKENS_DIR, DATA_DIR, MIDI_DIR
+from tokenizer_config import TokenizerConfigBuilder
 from get_midi import MidiReader
 import os
 from os import listdir
@@ -26,11 +26,11 @@ def convert(seconds):
 
 #get midi files
 print("Reading midi files . . .")
-midi = MidiReader(MIDI_PATH)
+midi = MidiReader(MIDI_DIR)
 midi_list, midi_scores = midi.read_midi_files()
 
 #create tokenizer config class instance for tokenizer handling
-tokenizer = TokenizerConfigBuiler()
+tokenizer = TokenizerConfigBuilder()
 tokenizer.set_config(use_tempos=True)
 
 #start tokenizing for each in TOKENIZERS list
@@ -44,23 +44,24 @@ for t in TOKENIZERS:
     print(f"Tokenizing using {t}. . .")
     start = time.time()
     tokenizer.choose_tokenizer(t)
-    tokens_path = os.path.join(TOKENS_PATH, t)
-    tokens = tokenizer.generate_tokens(midi_scores, tokens_path)
+    TOKENS_DIR = os.path.join(TOKENS_DIR, t)
+    tokens = tokenizer.generate_tokens(midi_scores, path = TOKENS_DIR)
     end = time.time()
     print(f"Tokenizing using {t} took {convert(end - start)} (hh:mm:ss)")
 
     #count the files (should be constant across all tokenizers)
-    num_files = sum(1 for f in listdir(tokens_path) if isfile(join(tokens_path, f))) - 1
+    num_files = sum(1 for f in listdir(TOKENS_DIR) if isfile(join(TOKENS_DIR, f))) - 1
     i = 0
 
     #prep the data for gpt
     print(f"Prepping data . . .")
     for file in range(num_files):
+        prepped_data += "\n"
         prepped_data_name = str(file) + ".json"
         # print(f"Reading file {prepped_data_name}")
-        token_path = os.path.join(tokens_path, prepped_data_name)
+        token_path = os.path.join(TOKENS_DIR, prepped_data_name)
         prepped_data += tokenizer.read_ids(token_path)
-
+        
     #save the files
     print(f"Saving data from {num_files} files for {t} tokenizer . . .")
     prepped_data_dir = os.path.join(DATA_DIR, "prepped_data")

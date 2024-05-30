@@ -1,5 +1,6 @@
 from datasets import load_dataset, DatasetDict
 from transformers import AutoTokenizer, GPT2LMHeadModel, AutoConfig, DataCollatorForLanguageModeling, Trainer, TrainingArguments
+import time
 
 context_length = 128
 dataset = load_dataset("TayTT/REMI_set")
@@ -10,17 +11,17 @@ def int_to_char(example):
     return example
 
 
-def tokenize(piece):
-    outputs = tokenizer(
-        piece["tokens"],
-        # turncation=False,
-        max_length=CONTEXT_LENGTH,
-        return_overflowing_tokens=False)
+# def tokenize(piece):
+#     outputs = tokenizer(
+#         piece["tokens"],
+#         # turncation=False,
+#         max_length=CONTEXT_LENGTH,
+#         return_overflowing_tokens=False)
 
-    return outputs
+#     return outputs
 
-tokenized_datasets = dataset.map(
-    tokenize, batched=True, remove_columns=dataset['train'].column_names)
+# tokenized_datasets = dataset.map(
+#     tokenize, batched=True, remove_columns=dataset['train'].column_names)
 
 dataset = dataset.map(int_to_char, batched=True)
 
@@ -31,6 +32,42 @@ outputs = tokenizer(
     return_overflowing_tokens=True,
     return_length=True,
 )
+
+def tokenize(element):
+    outputs = tokenizer(
+        element["tokens"],
+        truncation=True,
+        max_length=context_length,
+        return_overflowing_tokens=True,
+        return_length=True,
+    )
+    input_batch = []
+    for length, input_ids in zip(outputs["length"], outputs["input_ids"]):
+        if length == context_length:
+            input_batch.append(input_ids)
+    return {"input_ids": input_batch}
+
+
+tokenized_datasets = dataset.map(
+    tokenize, batched=True, remove_columns=dataset["train"].column_names
+)
+
+def evaluate():
+    model.eval()
+    losses = []
+    for step, batch in enumerate(eval_dataloader):
+        with torch.no_grad():
+            outputs = model(batch["input_ids"], labels=batch["input_ids"])
+
+        losses.append(accelerator.gather(outputs.loss))
+    loss = torch.mean(torch.cat(losses))
+    try:
+        perplexity = torch.exp(loss)
+    except OverflowError:
+        perplexity = float("inf")
+    return loss.item(), perplexity.item()
+
+
 
 
 config = AutoConfig.from_pretrained(
@@ -68,6 +105,8 @@ args = TrainingArguments(
     save_steps=5_000,
     fp16=False,
     push_to_hub=True,
+    save_strategy="steps",
+    restore_callback_states_from_checkpoint=True
 )
 
 trainer = Trainer(
@@ -79,4 +118,12 @@ trainer = Trainer(
     eval_dataset=tokenized_datasets["valid"],
 )
 
-trainer.train()
+print("Training!")
+start = time.time()
+
+trainer.train('C:/Users/Tay/VSCode/MIDIBytes/codeparrot-ds/runs/May29_00-38-42_DESKTOP-UVR5C2O\events.out.tfevents.1716935922.DESKTOP-UVR5C2O.6744.0')
+trainer.save_model('C:/Users/Tay/VSCode/MIDIBytes/src/model')
+trainer.save_state('C:/Users/Tay/VSCode/MIDIBytes/src/model')
+end = time.time()
+
+print("Time elapsed: ", end-start)

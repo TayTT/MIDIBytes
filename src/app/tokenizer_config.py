@@ -3,8 +3,8 @@ from pathlib import Path
 from symusic import Score
 import miditok
 from pydub import AudioSegment
-from config import TOKENS_PATH
-from config import MIDI_FROM_TOKENS_PATH
+from config import TOKENS_DIR
+from config import MIDI_FROM_TOKENS_DIR
 from config import DEFAULT_CONFIG
 from config import DEFAULT_TOKENIZER
 from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MIDITokenizer, TokSequence
@@ -112,7 +112,7 @@ class TokenizerConfigBuiler:
     
     def tokens_to_MIDI(self, tokens: list[TokSequence] | TokSequence, name_file = None):
 
-        midi_from_tokens_path = Path(MIDI_FROM_TOKENS_PATH).resolve()
+        midi_from_tokens_path = Path(MIDI_FROM_TOKENS_DIR).resolve()
 
         # Teraz możesz bezpiecznie zapisać plik MIDI
         for i, token in enumerate(tokens):

@@ -4,7 +4,7 @@ COPY . /src/
 
 WORKDIR /src
 
-RUN apt-get update && apt-get upgrade -y && apt-get install ffmpeg -y && apt-get install wget -y && apt-get install zip unzip -y
+RUN apt-get update --fix-missing && apt-get upgrade -y && apt-get install ffmpeg -y && apt-get install wget -y && apt-get install zip unzip -y
 
 RUN wget "https://storage.googleapis.com/magentadata/datasets/maestro/v3.0.0/maestro-v3.0.0-midi.zip"
 

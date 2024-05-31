@@ -10,14 +10,20 @@ import requests
 import numpy as np
 
 # download the tiny shakespeare dataset
-input_file_path = os.path.join(os.path.dirname(__file__), 'REMI.txt')
-if not os.path.exists(input_file_path):
-    data_url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
-    with open(input_file_path, 'w') as f:
-        f.write(requests.get(data_url).text)
+input_file_path = os.path.join(os.path.dirname(__file__), 'TSD.txt')
+# if not os.path.exists(input_file_path):
+#     data_url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
+#     with open(input_file_path, 'w') as f:
+#         f.write(requests.get(data_url).text)
 
 with open(input_file_path, 'r') as f:
-    data = f.read()
+
+    f.seek(0, 2)
+    file_size = f.tell()
+    quarter_size = file_size // 192
+    f.seek(0)
+
+    data = f.read(quarter_size)
 print(f"length of dataset in characters: {len(data):,}")
 
 # get all the unique characters that occur in this text

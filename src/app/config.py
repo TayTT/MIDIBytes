@@ -4,13 +4,15 @@ Generating the projects path names and default configuration for tokenizers
 '''
 
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "."))
-DATA_DIR = os.path.join(ROOT_DIR, "..//data")
-MIDI_PATH = os.path.join(DATA_DIR, "midi")
-TOKENS_PATH = os.path.join(DATA_DIR, "tokens")
-MIDI_FROM_TOKENS_PATH = os.path.join(DATA_DIR, "midi_from_tokens")
+DATA_DIR = os.path.join(ROOT_DIR, "../data")
+MIDI_DIR = os.path.join(DATA_DIR, "midi")
+TOKENS_DIR = os.path.join(DATA_DIR, "tokens")
+MIDI_FROM_TOKENS_DIR = os.path.join(DATA_DIR, "midi_from_tokens")
+
 AUDIO_INPUT_PATH = os.path.join(DATA_DIR, "audio_in")
 AUDIO_OUTPUT_PATH = os.path.join(DATA_DIR, "audio_out")
-EXAMPLE_DIR = os.path.join(MIDI_PATH, "2018")
+
+EXAMPLE_DIR = os.path.join(MIDI_DIR, "2018")
 
 #for compare tests --- NEEDS TO BE DELETED
 #COMPARE_DIR = os.path.join(ROOT_DIR, ".\\compare")

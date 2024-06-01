@@ -14,10 +14,6 @@ RUN rm maestro-v3.0.0-midi.zip
 
 RUN pip3 install -r requirements.txt
 
-RUN mkdir -p data/tokens
-
-RUN mkdir -p data/midi_from_tokens
-
 WORKDIR /src/app
 
 EXPOSE 8501

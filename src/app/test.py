@@ -1,11 +1,11 @@
 from config import TOKENS_DIR, DATA_DIR, MIDI_DIR, EXAMPLE_DIR
 from tokenizer_config import TokenizerConfigBuiler
 from get_midi import MidiReader
+
 import os
 from miditok import REMI, TokSequence, TokenizerConfig
 from pathlib import Path
 import json
-
 
 '''
 Test file for the get_midi, tokenizer_config files
@@ -43,7 +43,6 @@ tokens_BPE = tokenizer.generate_tokens(midi_scores, os.path.join(DATA_DIR, "toke
 
 #convert tokens back to MIDI and see differences
 back_to_MIDI = tokenizer.tokens_to_MIDI(tokens)
-
 back_to_MIDI_bpe = tokenizer.tokens_to_MIDI(tokens_BPE, path=os.path.join(DATA_DIR, "midi_from_tokens_bpe"))
 
 with open('src/data/tokens/0.json', 'r') as file:
@@ -54,8 +53,8 @@ with open('src/data/tokens_bpe/0.json', 'r') as file:
     data_bpe = json.load(file)
 ids_list_bpe = data_bpe['ids'][0]  
 
-print(ids_list[:10])
-print(ids_list_bpe[:10])
+#print(ids_list[:10])
+#print(ids_list_bpe[:10])
 
-print(len(ids_list))
-print(len(ids_list_bpe))
+#print(len(ids_list))
+#print(len(ids_list_bpe))

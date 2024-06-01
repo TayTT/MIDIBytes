@@ -26,7 +26,7 @@ Class has two key components: tokenizer and configuration and some methods:
    lets you generate MIDI file from a set of tokens. Returns MIDI file
 '''
 
-class TokenizerConfigBuiler:
+class TokenizerConfigBuilder:
     def __init__(self):
         self.tokenizer: MusicTokenizer = DEFAULT_TOKENIZER
         self.configuration: TokenizerConfig = TokenizerConfig(
@@ -54,6 +54,9 @@ class TokenizerConfigBuiler:
             use_tempos = use_tempos,
             use_time_signatures = use_time_signatures,
             use_sustain_pedals = use_sustain_pedals)
+
+    def get_config(self):
+      print(self.configuration)
         
     def choose_tokenizer(self, chosen_tokenizer: str):
         if chosen_tokenizer == "REMI":
@@ -85,6 +88,7 @@ class TokenizerConfigBuiler:
             token = self.tokenizer.midi_to_tokens(midi_file)
             self.tokenizer.save_params(Path(tokens_path, "tokenizer.json"))
             tokens.append(token)
+            
             self.tokenizer.save_tokens(token, path=Path(tokens_path,  str(i)+".json"))
 
         return tokens # TokSequence
@@ -124,36 +128,32 @@ class TokenizerConfigBuiler:
 
         return dataloader
     
-    def tokens_to_MIDI(self, tokens: list[TokSequence] | TokSequence, name_file = None, path=MIDI_FROM_TOKENS_DIR):
 
+    def tokens_to_MIDI(self, tokens: list[TokSequence] | TokSequence, name_file = None, path=MIDI_FROM_TOKENS_DIR):
         midi_from_tokens_path = Path(path).resolve()
 
         # Teraz możesz bezpiecznie zapisać plik MIDI
         for i, token in enumerate(tokens):
             midi_file = self.tokenizer.tokens_to_midi(token)
-            if name_file == None:
-                midi_file.dump_midi(midi_from_tokens_path / f"{i}.mid")
+            if filenames == None:
+                midi_file.dump_midi(midi_from_tokens_path / f"{i}.midi")
             else:
-                midi_file.dump_midi(midi_from_tokens_path / f"{name_file}.mid")
-        
-        print("Tokens converted to MIDI")
+                midi_file.dump_midi(midi_from_tokens_path / f"{os.path.splitext(filenames[i])[0]}_out.midi")
 
-    def midi_to_mp3(midi_file, mp3_name):
+    def midi_to_audio(self, midi_file, audio_path, audio_name):
         # Convert MIDI to WAV using fluidsynth
-        wav_file = mp3_name.replace('.mp3', '.wav')
-        os.system(f'fluidsynth -ni ../data/GeneralUser GS 1.471/GeneralUser GS v1.471.sf2 {midi_file} -F {wav_file} -r 44100')
+        wav_file = f"{audio_path}/{audio_name}.wav"
+        os.system(f'fluidsynth -ni .soundfont/GeneralUserGS.sf2 {midi_file} -F {wav_file} -r 44100')
         # Convert WAV to MP3 using pydub
-        audio = AudioSegment.from_wav(wav_file)
+        #audio = AudioSegment.from_wav(wav_file)
         # audio.export("../../data/mp3/"+mp3_name, format='mp3')
-        mp3_directory = "../data/mp3/"
-        if not os.path.exists(mp3_directory):
-            os.makedirs(mp3_directory)
-
         # Export MP3 file
-        mp3_path = os.path.join(mp3_directory, mp3_name)
-        audio.export(mp3_path, format='mp3')
+        #export_path = os.path.join(mp3_path, mp3_name + ".mp3")
+        #audio.export(export_path, format='mp3')
         # Remove temporary WAV file
-        os.remove(wav_file)
+        #os.remove(wav_file)
+
+        return wav_file
 
     def read_ids(self, file_path: Path) -> str:
         try:

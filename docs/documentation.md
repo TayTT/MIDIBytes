@@ -47,6 +47,7 @@ Poniżej przedstawione są wymagania systemowe:
 - numpy
 - transformers
 - prettymidi
+- wandb
 
 ## Architektura systemu
 
@@ -84,7 +85,7 @@ Uruchom komendę prepare. Służy ona do stworzenia plików meta.pkl potrzebnych
 python data/tokenizer/prepare.py --file_name=REMI.txt
 ```
 
-By uruchomić pętlę należy uruchomić komendę:
+By uruchomić pętlę należy uruchomić poniższą komendę. W celu włączenia funkcji logowania postępów należy w pliku konfiguracyjnym *config/train_tokenizer.py* zmienić parametr **wandb_log** na True. 
 ```sh
 python train.py config/train_tokenizer.py
 ```

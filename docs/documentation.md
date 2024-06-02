@@ -43,11 +43,65 @@ Poniżej przedstawione są wymagania systemowe:
 - pydub 0.25.1
 - fluidsynth 0.2
 - Docker
+- pytorch
+- numpy
+- transformers
+- prettymidi
 
 ## Architektura systemu
 
+Aplikacja znajduje się na branchu **main** natomiast przygotowanie danych oraz trenowanie na branchu **nano-prep**.
+
 ### Opis modułów
-1. **Wgrywanie i tokenizacja plików midi**
+#### Moduł z brancha nano-prep
+1. **Pobieranie datasetu i tworzenie struktury folderów**
+
+Poniższa komenda umożliwia pobranie datasetu Maestro i stwarza strukturę folderów.
+
+```sh
+python .\fetch_maestro.py 
+```
+
+2. **Przygotowanie danych do trenowania**
+
+Poniższa komenda tworzy pliki .txt dla wybranych tokenizatorów i zapisuje je w *prepare_data\data\prepped_data* nadając nazwe pliku typu **nazwa_tokenizatora**.txt.
+
+```sh
+python .\prepare_data\prep_data.py
+```
+
+3. **Trenowanie modelu**
+
+W celu wytrenowania modelu trzeba najpierw uruchomić poniższe komendy. 
+
+Przejdź do folderu trenowania
+```sh
+cd model_training
+```
+
+Uruchom komendę prepare. Służy ona do stworzenia plików meta.pkl potrzebnych później przy tworzeniu sampli modelu. Jako argument wywołania podaje się nazwę pliku txt, jeśli nie zostanie podana nazwa program nie wykona się.
+```sh
+python data/tokenizer/prepare.py --file_name=REMI.txt
+```
+
+By uruchomić pętlę należy uruchomić komendę:
+```sh
+python train.py config/train_tokenizer.py
+```
+W pliku *model_training\config\train_tokenizer.py* znajduje się konfiguracja parametrów uczenia, którą można zmienić w ramach trenowania
+
+4. **Ewaluacja modelu**
+Ocena modelu polega na obliczeniu błędów TSE (token syntax error) [1] oraz ocenie subiektywnej po odsłuchu wygenerowanego nagrania. By uruchomić skrypt należy uruchomić poniższą komendę:
+
+```sh
+python models\run_evaluation.py
+```
+
+By zmienić parametry oceny należy edytować stałe znajdujące się w pliku *models\generation_config.py*. Możliwa jest edycja ilości wygenerowanych sampli, zmiany pliku rozpoczynającego generowaną sekwencję, zmianę długości sekwencji startowej oraz kilku dodatkowych parametrów.
+
+Wyniki generacji wyświetlane są na ekran oraz zapisane do pliku w ścieżce *data\generated_data*.
+
+#### Moduł z brancha main
 
 
 ## Instalacja i konfiguracja
@@ -57,3 +111,5 @@ Poniżej przedstawione są wymagania systemowe:
 ## Struktura katalogów i plików
 
 ## Testowanie
+
+[1] "Impact of time and note duration tokenizations on deep learning symbolic music modeling" by Nathan Fradet.

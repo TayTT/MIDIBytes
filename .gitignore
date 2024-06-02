@@ -1,1 +1,12 @@
 src/app/__pycache__
+models/MIDILike/ckpt.pt
+models/MuMIDI/ckpt.pt
+models/Octuple/ckpt.pt
+models/REMI/ckpt.pt
+models/REMI_BPE/ckpt.pt
+models/Structured/ckpt.pt
+models/TSD/ckpt.pt
+models/CPWord/ckpt.pt
+models/__pycache__
+
+models/*.pt

@@ -17,12 +17,26 @@ If you want to train models for different tokenizers you can run a file **run_tr
 After training run a following command:
 
 ``` sh
-python sample.py --out_dir=out-shakespeare-char --device=cpu
+python sample.py --out_dir=[insert output folder] 
 ```
 
 The script will generate output.json file with generated tokens and save it in *generated_data\txt\output.json* path. If you want to listen to generated music copy *output.json* to prepare_data folder and run test.py. This script will generate test.midi file you can listen to.
 
-# To fix:
+# Evalutation:
 
-1. Fixing generated tokens - data needs to be checked before converting to midi (it has to be in a accepted range). 
-2. Is there a way of controling the generated file length? Generated midis are short
+Add a folder with tokenizer as name. Insert .pt and meta.pkl files inside.
+
+Configuration for evaluation can be changed in a *models\generation_config.py* file. You can change tokenizer, prompts for models, number of samples and different parameters.
+
+To run evaluation enter following command:
+
+```sh
+python models\run_evaluation.py
+```
+
+Generated midi files and computed errors will be in *data\generated_data* folder.
+
+To check if generated tokens are correct, TSE (Token syntax error) metrics were used [1].
+
+
+[1]"Impact of time and note duration tokenizations on deep learning symbolic music modeling" by Nathan Fradet . 

@@ -8,13 +8,26 @@ import os
 import pickle
 import requests
 import numpy as np
+import argparse
 
 # download the tiny shakespeare dataset
-input_file_path = os.path.join(os.path.dirname(__file__), 'TSD.txt')
-# if not os.path.exists(input_file_path):
-#     data_url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
-#     with open(input_file_path, 'w') as f:
-#         f.write(requests.get(data_url).text)
+parser = argparse.ArgumentParser(description='Script for preparing data.')
+parser.add_argument('--file_name', type=str, help='Name of the input file.')
+
+# Parsowanie argumentów wiersza poleceń
+args = parser.parse_args()
+
+
+input_file_path = os.path.join('..\\prepare_data\\data\\prepped_data')
+
+if args.file_name != None:
+    file_name = args.file_name
+else:
+    raise BaseException("No file_name argument was given. Aborting")
+
+input_file_path = os.path.join(input_file_path, file_name)
+
+print(f"Preparing {file_name} file...")
 
 with open(input_file_path, 'r') as f:
 

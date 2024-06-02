@@ -1,4 +1,4 @@
-from config import TOKENS_DIR, DATA_DIR, MIDI_DIR
+from prep_config import TOKENS_DIR, DATA_DIR, MIDI_DIR, ROOT_DIR
 from tokenizer_config import TokenizerConfigBuilder
 from get_midi import MidiReader
 import os
@@ -10,8 +10,8 @@ import time
 Create tokens from datasets for all tokenizers and convert the data into a gpt-insertable format
 Data available in folder /data/prepped_data
 '''
-
-TOKENIZERS = ["REMI", "MIDILike", "TSD", "Structured", "CPWord", "MuMIDI", "Octuple"]
+# "REMI", "MIDILike", "TSD", "Structured", "CPWord", "MuMIDI", "Octuple"
+TOKENIZERS = ["REMI"]
 
 
 def convert(seconds):
@@ -22,7 +22,6 @@ def convert(seconds):
     seconds %= 60
 
     return "%d:%02d:%02d" % (hour, minutes, seconds)
-
 
 #get midi files
 print("Reading midi files . . .")
@@ -39,18 +38,20 @@ prepped_data = ""
 
 overall_start = time.time()
 for t in TOKENIZERS:
+    tokens_dir = ""
+    prepped_data = ""
     #generate tokens
     data_start = time.time()
     print(f"Tokenizing using {t}. . .")
     start = time.time()
     tokenizer.choose_tokenizer(t)
-    TOKENS_DIR = os.path.join(TOKENS_DIR, t)
-    tokens = tokenizer.generate_tokens(midi_scores, path = TOKENS_DIR)
+    tokens_dir = os.path.join(TOKENS_DIR, t)
+    # tokens = tokenizer.generate_tokens(midi_scores, path = tokens_dir)
     end = time.time()
     print(f"Tokenizing using {t} took {convert(end - start)} (hh:mm:ss)")
 
     #count the files (should be constant across all tokenizers)
-    num_files = sum(1 for f in listdir(TOKENS_DIR) if isfile(join(TOKENS_DIR, f))) - 1
+    num_files = sum(1 for f in listdir(tokens_dir) if isfile(join(tokens_dir, f))) - 1
     i = 0
 
     #prep the data for gpt
@@ -59,8 +60,8 @@ for t in TOKENIZERS:
         prepped_data += "\n"
         prepped_data_name = str(file) + ".json"
         # print(f"Reading file {prepped_data_name}")
-        token_path = os.path.join(TOKENS_DIR, prepped_data_name)
-        prepped_data += tokenizer.read_ids(token_path)
+        token_path = os.path.join(tokens_dir, prepped_data_name)
+        prepped_data += tokenizer.read_ids(token_path, tokenizer=t)
         
     #save the files
     print(f"Saving data from {num_files} files for {t} tokenizer . . .")

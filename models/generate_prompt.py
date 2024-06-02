@@ -19,14 +19,10 @@ if TOKENIZER == "MuMIDI":
     tokens = tokens[0].ids
 else:
     tokens = tokens[0][0].ids
-
-# if TOKENIZER == "MuMIDI" : #or TOKENIZER == "Octuple": ##CPWord Octuple
-#     tokens = [item for sublist in tokens for item in sublist]
     
 selected_tokens = tokens[:NUMBER_OF_TOKENS]
 token_string = ",".join(map(str, selected_tokens))
 
-# Zapisanie do pliku
 with open(os.path.join(OUTPUT_DIR, f"{PROMPT_FILE_NAME}"), "w") as file:
     file.write(token_string)
     

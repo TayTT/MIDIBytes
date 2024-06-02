@@ -3,12 +3,8 @@ from pathlib import Path
 from symusic import Score
 import miditok
 from pydub import AudioSegment
-from config import TOKENS_PATH
-from config import MIDI_FROM_TOKENS_PATH
-from config import DEFAULT_CONFIG
-from config import DEFAULT_TOKENIZER
+from config import TOKENS_DIR, DEFAULT_TOKENIZER, MIDI_FROM_TOKENS_DIR
 from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MIDITokenizer, TokSequence
-# from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
 from torch.utils.data import DataLoader
 import json
 
@@ -78,7 +74,7 @@ class TokenizerConfigBuilder:
         else:
             raise ValueError("Unknown tokenizer")  
     
-    def generate_tokens(self, midi_scores: list, BPE: bool = False, tokenizer_name="", path = None, is_prompt = False) -> TokSequence:
+    def generate_tokens(self, midi_scores: list, BPE: bool = False, tokenizer_name="", path = None) -> TokSequence:
         
         tokens = []
         for i, midi_file in enumerate(midi_scores):
@@ -89,19 +85,10 @@ class TokenizerConfigBuilder:
                 self.tokenizer.save_tokens(token, path=Path(path,  str(i)+".json"))
                 self.tokenizer.save_params(Path(path, "tokenizer.json"))
             else:
-                self.tokenizer.save_tokens(token, path=Path(TOKENS_PATH,  tokenizer_name + str(i)+".json"))
-                self.tokenizer.save_params(Path(TOKENS_PATH, "tokenizer.json"))
+                self.tokenizer.save_tokens(token, path=Path(TOKENS_DIR,  tokenizer_name + str(i)+".json"))
+                self.tokenizer.save_params(Path(TOKENS_DIR, "tokenizer.json"))
                 
-        return tokens # TokSequence
-        
-        # dataset_chunks_dir = TOKENS_PATH
-        
-        # split_midis_for_training(
-        # files_paths=midi_files,
-        # tokenizer=self.tokenizer,
-        # save_dir=dataset_chunks_dir,
-        # max_seq_len=1024,
-        # )
+        return tokens
     
     def make_data_loader(self, midi_files: list):
         #Splitting MIDI files
@@ -119,7 +106,7 @@ class TokenizerConfigBuilder:
     
     def tokens_to_MIDI(self, tokens: list[TokSequence] | TokSequence, filenames = None):
 
-        midi_from_tokens_path = Path(MIDI_FROM_TOKENS_PATH).resolve()
+        midi_from_tokens_path = Path(MIDI_FROM_TOKENS_DIR).resolve()
 
         # Teraz możesz bezpiecznie zapisać plik MIDI
         for i, token in enumerate(tokens):

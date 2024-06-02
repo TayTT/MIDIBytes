@@ -10,3 +10,6 @@ models/CPWord/ckpt.pt
 models/__pycache__
 
 models/*.pt
+
+prepare_data\__pycache__
+model_training\__pycache__

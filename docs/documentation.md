@@ -59,7 +59,7 @@ Aplikacja znajduje się na branchu **main** natomiast przygotowanie danych oraz 
 
 ### Opis modułów
 #### Moduł aplikacji
-### Ogólny opis modułu aplikacji
+##### Ogólny opis modułu aplikacji
 
 Moduł aplikacji umożliwia użytkownikom wybór tokenizatorów, wgrywanie plików MIDI, określenie długości sekwencji startowej do generacji oraz generowanie i ocenę wynikó przy pomocy prostego i intuicyjnego interfejsu. Proces składa się z kilku kroków:
 
@@ -80,7 +80,7 @@ Moduł aplikacji umożliwia użytkownikom wybór tokenizatorów, wgrywanie plik�
    - Po zakończeniu generowania wyników użytkownik może odtworzyć pliki, pobrać je oraz zobaczyć tabelę z metrykami.
    - Jeśli użytkownik chce wygenerować nową próbkę, klika przycisk "start again".
 
-#### Moduł treningu i przygotowania modeli
+##### Moduł treningu i przygotowania modeli
 
 Moduł ten obejmuje następujące kroki:
 
@@ -97,13 +97,80 @@ Moduł zapewnia pełny cykl pracy od pobierania danych po trenowanie i ewaluacj�
 
 ## Instalacja i konfiguracja
 
+Aby skonfigurować aplikację, konieczne jest zainstalowanie i skonfigurowanie kilku narzędzi i bibliotek. Poniżej znajduje się opis kroków, które należy wykonać:
+
+#### 1. Python 3.12
+Zainstaluj Python 3.12, który jest wymagany do uruchomienia aplikacji. Możesz pobrać go z [oficjalnej strony Pythona](https://www.python.org/downloads/).
+
+#### 2. Biblioteki Python
+By móc korzystać z modułu trenowania modeli należy pobrać odpowiednie biblioteki. Możesz to zrobić za pomocą polecenia `pip` i pliku `requirements.txt`. Stwórz plik `requirements.txt` i umieść w nim następujące biblioteki:
+
+```
+miditok==3.0.3
+streamlit
+midi2audio==0.1.1
+pathlib==1.0.1
+symusic==0.4.3
+torch==2.2.1
+pydub==0.25.1
+fluidsynth==0.2
+pytorch
+numpy
+transformers
+prettymidi
+wandb
+music21
+matplotlib
+```
+
+Następnie uruchom komendę:
+
+```sh
+pip install -r requirements.txt
+```
+
+#### 3. Visual Studio Code (VSCode)
+Visual Studio Code (VSCode) jest zalecanym edytorem kodu do pracy nad projektem. Możesz pobrać go z [oficjalnej strony Visual Studio Code](https://code.visualstudio.com/).
+
+Po zainstalowaniu VSCode, warto zainstalować następujące rozszerzenia:
+- Python
+- Docker
+- GitLens
+
+#### 4. Git
+By pobrać kod źródłowy sklonuj repozytorium projektu przy użyciu komendy:
+
+```sh
+git clone [<url-repozytorium>](https://github.com/TayTT/MIDIBytes.git)
+```
+
+#### 5. Docker
+Docker umożliwia tworzenie i uruchamianie aplikacji w kontenerach. Możesz pobrać go z [oficjalnej strony Docker](https://www.docker.com/products/docker-desktop).
+
+Po zainstalowaniu programu Docker, uruchom go i upewnij się, że działa poprawnie.
+
+#### 6. Konfiguracja aplikacji
+By skonfigurować aplikację należy przejść do folderu src, a następnie uruchomić komendę:
+
+```sh
+docker compose up
+```
+
 ## Użycie
+### Korzystanie z aplikacji
+Aplikacja pozwala na ocenę jakości generacji muzyki dla 6 tokenizatorów. Aby jej użyć aplikacji należy skorzystać z konteneryzatora Docker.
 
-### Moduł aplikacji
+**Uruchamianie aplikajci przy użyciu Docker'a**
+1. Uruchomić środowisko Docker, np. aplikację desktopową Docker.
+2. W folderze src uruchomić komendę docker compose build:
+	``` cd src ```
+	``` docker compose build ```
+3. Po zbudowaniu kontenera:
+	``` docker compose up ```
+4. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
+	``` localhost:8501```
 
-
-
-### Moduł treningu i przygotowania modeli
+### Korzystanie z modułu do trenowania modeli
 
 1. **Pobieranie datasetu i tworzenie struktury folderów**
 

@@ -167,15 +167,19 @@ Aplikacja pozwala na ocenę jakości generacji muzyki dla 6 tokenizatorów. Aby 
 1. Uruchomić środowisko Docker, np. aplikację desktopową Docker.
 2. W folderze src uruchomić komendę docker compose build:
 	```sh
-	 cd src ```
+	 cd src
+  	```
 	```sh
-	 docker compose build ```
+	 docker compose build
+  	```
 4. Po zbudowaniu kontenera:
 	```sh
-	  docker compose up ```
+	  docker compose up
+	 ```
 5. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
 	```sh
-	 localhost:8501```
+	 localhost:8501
+	 ```
 
 ### Korzystanie z modułu do trenowania modeli
 

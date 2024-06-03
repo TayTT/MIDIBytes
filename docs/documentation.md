@@ -141,7 +141,7 @@ Po zainstalowaniu VSCode, warto zainstalować następujące rozszerzenia:
 By pobrać kod źródłowy sklonuj repozytorium projektu przy użyciu komendy:
 
 ```sh
-git clone [<url-repozytorium>](https://github.com/TayTT/MIDIBytes.git)
+git clone https://github.com/TayTT/MIDIBytes.git
 ```
 
 #### 5. Docker

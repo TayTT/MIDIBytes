@@ -1,8 +1,10 @@
-streamlit
 miditok==3.0.3
-midi2audio==0.1.1
-pathlib==1.0.1
-symusic==0.4.3
-torch==2.2.1
 pydub==0.25.1
-fluidsynth==0.2
+streamlit==1.35.0
+symusic==0.4.8
+tiktoken==0.7.0
+torch==2.3.0
+transformers==4.41.2
+streamlit_js_eval==0.1.7
+pretty_midi==0.2.10
+music21==9.1.0

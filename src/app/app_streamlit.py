@@ -1,11 +1,20 @@
 import streamlit as st
-import shutil
+import pandas as pd
 import os
 
-from config import EXAMPLE_DIR, TOKENS_PATH, MIDI_FROM_TOKENS_PATH, AUDIO_INPUT_PATH, AUDIO_OUTPUT_PATH
-from tokenizer_config import TokenizerConfigBuilder
-from get_midi import MidiReader as mr
+from time import sleep, time
+from sample import create_sample
+from utils import get_available_models, midi_to_audio
+from config import MODEL_DIR, GENERATED_SAMPLE_DIR
+from generate_prompt import gen_prompt
+from tokenizer_config import TokenizerConfigBuilder as tcb
+from evaluation import analyze
+from streamlit_js_eval import streamlit_js_eval
+from miditok import REMI, MIDILike, TSD, Structured, CPWord, Octuple
 
+# This file contains the application GUI
+
+# basic page config
 st.set_page_config(
     page_title="MIDIBytes",
     page_icon="🎶",
@@ -15,140 +24,209 @@ st.set_page_config(
     }
 )
 
-def get_filenames(paths):
-  filenames = []
-  for path in paths:
-    filenames.append(os.path.basename(path))
+# page keys
+if 'page' not in st.session_state: st.session_state.page = 0
+if 'selected_tokenizers_backup' not in st.session_state: st.session_state.selected_tokenizers_backup = None
+
+# keys watchdog
+def watchdog():
+    if 'selected_tokenizers' not in st.session_state: st.session_state.selected_tokenizers = st.session_state.selected_tokenizers_backup
+    if st.session_state.selected_tokenizers is not None: st.session_state.selected_tokenizers_backup = st.session_state.selected_tokenizers
+
+# page logic
+def nextPage(): 
+    st.session_state.page += 1
+    watchdog()
+
+def restartApp():
+    streamlit_js_eval(js_expressions="parent.window.location.reload()")
+
+def save_file(bytes, name = "sequence.midi"):
+    with open(name, 'wb') as f: 
+      f.write(bytes)
+
+def create_wav(midi_path, name):
+    with st.empty():
+        st.write("Fluidsynth working...")
+        audio_path = midi_to_audio(midi_path)
+        st.audio(audio_path)
+
+def midize(name, json_path):
+    # trim _BPE part if present
+    if "BPE" in name:
+        bpe_encoded = True
+    else:
+        bpe_encoded = False
+        
+    tokenizer_name = name.replace("_BPE", "")
     
-  return filenames
+    if bpe_encoded:
+        if tokenizer_name == "REMI":
+            tokenizer = REMI.from_pretrained("TayTT/REMI_BPE")
+        elif tokenizer_name == "MIDILike":
+            tokenizer = MIDILike.from_pretrained("TayTT/MIDILike_BPE")
+        elif tokenizer_name == "TSD":
+            tokenizer = TSD.from_pretrained("TayTT/TSD_BPE")
+        elif tokenizer_name == "Structured":
+            tokenizer = Structured.from_pretrained("TayTT/Structed_BPE")
+        elif tokenizer_name == "CPWord":
+            tokenizer = CPWord.from_pretrained("TayTT/CPWord_BPE")
+        elif tokenizer_name == "Octuple":
+            tokenizer = Octuple.from_pretrained("TayTT/Octuple_BPE")
+        else:
+            raise ValueError("Unknown tokenizer")
+        
+        tokens = tokenizer.load_tokens(path = json_path)
+        midi_file = tokenizer.decode(tokens)
+        midi_path = os.path.join(GENERATED_SAMPLE_DIR, f"{name}.midi")
+        midi_file.dump_midi(midi_path)
+        
+    else:
+        tokenizer = tcb()
+        tokenizer.set_config(use_tempos = True)
+        tokenizer.choose_tokenizer(tokenizer_name)
+        tokens = tokenizer.tokenizer.load_tokens(path = json_path)
+        
+        midi_file = tokenizer.tokenizer.decode(tokens)
+        midi_path = os.path.join(GENERATED_SAMPLE_DIR, f"{name}.midi")
+        midi_file.dump_midi(midi_path)
+    
+    return midi_path, tokens
+    
+# def midize(name, json_path):
+    # tokenizer = tcb()
+    # tokenizer.set_config(use_tempos = True)
+    
+    # # trim _BPE part if present
+    # tokenizer_name = name.replace("_BPE", "")
+    
+    # tokenizer.choose_tokenizer(tokenizer_name)
+    # tokens = tokenizer.tokenizer.load_tokens(path = json_path)
+    
+    # midi_file = tokenizer.tokenizer.decode(tokens)
+    # midi_path = os.path.join(GENERATED_SAMPLE_DIR, f"{name}.midi")
+    # midi_file.dump_midi(midi_path)
+    
+    # return midi_path, tokens
+    
+def sample(selected_tokenizer: str, prompt: str, gen_length: int):
+    start_time = time()
+    json_path = create_sample(selected_tokenizer, prompt, gen_length)
+    end_time = time()
+    st.write(f"{selected_tokenizer}")
+    midi_path, tokens = midize(selected_tokenizer, json_path)
+    create_wav(midi_path, selected_tokenizer)
+    return end_time - start_time, tokens, midi_path
 
-def make_iterable(object):
-  object = [object] if not isinstance(object, list) else object
-  
-  return object
-
-def purge_dir(path):
-  if os.path.exists(path):
-    shutil.rmtree(path)
-  os.makedirs(path)
-
-def get_pregen_samples():
-  # get some generated samples stored locally
-  pass
-
-def get_generated_samples():
-  # generate new samples
-  pass
-
-def get_maestro_samples(sel_midi):
-  midi = mr(EXAMPLE_DIR)
-  midi_list, midi_scores = midi.read_midi_files()
-
-  if sel_midi == "Single sample":
-    samples = midi_list[0]
-    scores = midi_scores[0]
-  else:
-    samples = midi_list[:3]
-    scores = midi_scores[:3]
-
-  return samples, scores
-
-def get_audio(tokenizer, container, in_out_path, midi_records):
-  filenames = get_filenames(midi_records)
-  for record, filename in list(zip(midi_records, filenames)):
-    audio_path = tokenizer.midi_to_audio(record, in_out_path, os.path.splitext(filename)[0])
-    container.write(filename)
-    container.audio(audio_path)
-
-def get_output(samples, scores, sel_tokenizer, log_container, container):
-  # make sure that samples & scores are iterable objects
-  samples = make_iterable(samples)
-  scores = make_iterable(scores)
-  
-  log_container.write("Using midi file(s):")
-  for sample, score in list(zip(get_filenames(samples), scores)):
-    log_container.write(sample)
-    log_container.write(score)
-
-  log_container.write(f"Using tokenizer: {sel_tokenizer}")
-
-  tokenizer = TokenizerConfigBuilder()
-  tokenizer.set_config(use_tempos = True)
-  tokenizer.choose_tokenizer(sel_tokenizer)
-
-  log_container.write("Generating audio files from input MIDI samples")
-  container.write("Input midi files as audio/wav")
-  # re-create a dir if it exists
-  purge_dir(AUDIO_INPUT_PATH)
-  get_audio(tokenizer, container, AUDIO_INPUT_PATH, samples)
-
-  #log_container.write("Applying config: ")
-  #log_container.write(tokenizer.get_config())
-
-  log_container.write("Generating tokens")
-
-  # make sure that the output dir actually exists within fs
-  os.makedirs(TOKENS_PATH, exist_ok = True)
-  tokens = tokenizer.generate_tokens(scores)
-
-  log_container.write("Converting tokens back to MIDI format")
-  # re-create a dir if it exists
-  purge_dir(MIDI_FROM_TOKENS_PATH)
-  tokenizer.tokens_to_MIDI(tokens, get_filenames(samples))
-
-  midi = mr(MIDI_FROM_TOKENS_PATH)
-  midi_list, midi_scores = midi.read_midi_files()
-
-  for record, score in list(zip(get_filenames(midi_list), midi_scores)):
-    log_container.write(record)
-    log_container.write(score)
-
-  log_container.write("Generating audio files from output MIDI samples")
-  container.write("Output midi files as audio/wav")
-  # re-create a dir if it exists
-  purge_dir(AUDIO_OUTPUT_PATH)
-  get_audio(tokenizer, container, AUDIO_OUTPUT_PATH, midi_list)
-
-  # comparison table
-  # TODO
-
-  # grade panel
-  # TODO
+def empty(cnt):
+    with cnt.container():
+        for _ in range(10):
+            st.write("")
+    sleep(0.01)
 
 def main():
-  st.title("MIDIBytes")
-  container = st.container()
+    st.title("MIDIBytes")
+    st.text(" ") # empty line
 
-  container.subheader("Step 1")
-  origin_select = container.radio("Choose sample origin", ["Maestro", "Pregen", "Generate"], horizontal=True)
+    # create a main container
+    main_container = st.empty()
 
-  container.subheader("Step 2")
-  sample_select = container.radio("Choose test size", ["Single sample", "Multiple samples"], horizontal=True)
-  
-  container.subheader("Step 3")
-  tokenizer_select = container.radio("Choose tokenizer", ["REMI",
-                                                          "MIDILike",
-                                                          "TSD",
-                                                          "Structured",
-                                                          "CPWord",
-                                                          "MuMIDI",
-                                                          "MMM",
-                                                          "Octuple"], horizontal=True)
-  
-  if container.button("Start"):
-    log_container = container.expander("Logs")
-    container.subheader("Results")
+    # step 1 page
+    if st.session_state.page == 0:
+        with main_container.container():
+            st.subheader("Step 1")
+            st.write("Select tokenizers")
+            
+            # get a list of available tokenizers based on model
+            av_models = get_available_models(MODEL_DIR)
+            
+            st.multiselect(label = "Select tokenizers", 
+                label_visibility = "collapsed", 
+                placeholder = f"{av_models[0]}...",
+                options = av_models,
+                key = "selected_tokenizers")
+                
+            st.button("Continue", on_click = nextPage)
+        
+    # step 2 page
+    elif st.session_state.page == 1:
+        empty(main_container)
+        watchdog()
+        list_t = st.session_state.selected_tokenizers
+        with main_container.container():
+            st.subheader("Step 2")
+            st.write("Enter start sequence")
+            for tokenizer_name in list_t:
+                if not list_t[-1:] == [tokenizer_name]:
+                    st.text_input(label = f"...for {tokenizer_name}",
+                        label_visibility = "visible",
+                        key = f"prompt_{tokenizer_name}")
+                else:
+                    st.text_input(label = f"...for {tokenizer_name}",
+                        label_visibility = "visible",
+                        key = f"prompt_{tokenizer_name}",
+                        on_change = nextPage)
+            st.write("OR")
+            file = st.file_uploader(label = "Upload midi file", 
+                label_visibility = "collapsed",
+                type = "midi")
+            if file is not None:
+                byte_data = file.getvalue()
+                save_file(byte_data)
+                st.session_state.file_uploaded = None
+                nextPage()
+                st.rerun()
+        
+    # step 3 page 
+    elif st.session_state.page == 2:
+        empty(main_container)
+        watchdog()
+        list_t = st.session_state.selected_tokenizers
+        if 'prompts' not in st.session_state: st.session_state.prompts = []
+        with main_container.container():
+            st.subheader("Step 3")
+            if 'file_uploaded' in st.session_state:
+                value = st.slider("Percentage of provided sample to be used as a prompt", 0, 100, 0, step = 10)
+                _continue = st.button("Continue")
+                if _continue:
+                    for tokenizer in list_t:
+                        tokenizer_name = tokenizer.replace("_BPE", "")
+                        prompt, total_len, gen_len = gen_prompt(tokenizer_name, value)
+                        st.session_state.prompts.append([prompt, total_len, gen_len])
+                    nextPage()
+                    st.rerun()
+            else:
+                length = st.text_input(label = "How many tokens do You want to generate?",
+                        label_visibility = "visible")
+                if len(length) > 0:
+                    for tokenizer in list_t:
+                        input_sequence = st.session_state[f'prompt_{tokenizer}']
+                        st.session_state.prompts.append([input_sequence, len(input_sequence + length), length])
     
-    
-    # Primary code is executed here
-    if origin_select == "Maestro":
-      samples, scores = get_maestro_samples(sample_select)
-    elif origin_select == "Pregen":
-      pass
-    else:
-      pass
-
-    get_output(samples, scores, tokenizer_select, log_container, container)
-
+    # final page
+    elif st.session_state.page == 3:
+        empty(main_container)
+        watchdog()
+        list_t = st.session_state.selected_tokenizers
+        data_t = st.session_state.prompts
+        with main_container.container():
+            st.subheader("Results")
+            logs = st.expander("Logs")
+            logs.write("Starting...")
+            st.write("Reference audio")
+            create_wav("./sequence.midi", "sequence")
+            df_main = analyze("./sequence.midi")
+            for tokenizer_name, data in zip(list_t, data_t):
+                logs.write(f"Working on {tokenizer_name}...")
+                logs.write(f"The total length is {data[1]}, prompt length is {data[1] - data[2]}")
+                logs.write(f"Model needs to generate {data[2]} elements...")
+                elapsed, tokens, midi_path = sample(tokenizer_name, data[0], data[2])
+                df = analyze(midi_path)
+                df_main = pd.concat([df_main, df], ignore_index=True)
+                logs.write(f"Done generating for {tokenizer_name}, took {elapsed}s")
+            st.write(df_main)
+            st.write("That's all")
+            st.button("Run again", type="primary", on_click = restartApp)
+        
 if __name__ == "__main__":
-  main()
+    main()

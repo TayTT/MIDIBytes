@@ -4,13 +4,19 @@ COPY . /src/
 
 WORKDIR /src
 
-RUN apt-get update --fix-missing && apt-get upgrade -y && apt-get install ffmpeg -y && apt-get install wget -y && apt-get install zip unzip -y
+RUN mkdir -p data/model
 
-RUN wget "https://storage.googleapis.com/magentadata/datasets/maestro/v3.0.0/maestro-v3.0.0-midi.zip"
+WORKDIR /src/data/model
 
-RUN unzip -q maestro-v3.0.0-midi.zip && mkdir -p data && mv maestro-v3.0.0 data/midi
+RUN apt update --fix-missing && apt upgrade -y && apt install wget -y && apt install unzip -y
 
-RUN rm maestro-v3.0.0-midi.zip
+RUN wget -O model.zip "https://www.dropbox.com/scl/fi/hknnj6xk1jjb3v0it5t63/model.zip?rlkey=fulgjx73e3n1rnzr7d34f5kkt&st=9hgg7d5o"
+
+RUN unzip -q model.zip && rm model.zip
+
+RUN apt install ffmpeg -y && apt install fluidsynth -y
+
+WORKDIR /src
 
 RUN pip3 install -r requirements.txt
 

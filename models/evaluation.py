@@ -5,7 +5,7 @@ import os
 from music21 import converter, chord, note
 
 '''
-Evaluates REMI, TSD and Structured tokenizers.
+TSE for REMI, TSD and Structured tokenizers.
 Loads generated .json files containing tokens, converts to token list and caluculates errors
 
 Calculates prettyMIDI parameters, pitch and velocity range, harmonic coefficient

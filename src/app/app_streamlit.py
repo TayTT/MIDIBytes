@@ -68,7 +68,7 @@ def midize(name, json_path):
         elif tokenizer_name == "TSD":
             tokenizer = TSD.from_pretrained("TayTT/TSD_BPE")
         elif tokenizer_name == "Structured":
-            tokenizer = Structured.from_pretrained("TayTT/Structed_BPE")
+            tokenizer = Structured.from_pretrained("TayTT/Structured_BPE")
         elif tokenizer_name == "CPWord":
             tokenizer = CPWord.from_pretrained("TayTT/CPWord_BPE")
         elif tokenizer_name == "Octuple":

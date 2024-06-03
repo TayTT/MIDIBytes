@@ -1,7 +1,7 @@
 import os
 
 
-["REMI", "MIDILike", "TSD", "Structured", "CPWord", "MuMIDI", "Octuple"]
+["REMI", "MIDILike", "TSD", "Structured", "CPWord", "Octuple"]
 #for evaluation:
 tokenizer_name = "REMI"
 

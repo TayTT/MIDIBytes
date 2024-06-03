@@ -1,5 +1,5 @@
-err_type = 0.0027100271002710027,
+err_type = 0.0,
  err_time = 0.0,
- err_ndup = 0.0,
+ err_ndup = 0.0007032348804500703,
  err_nnon = 0.0,
  err_nnof = 0.0

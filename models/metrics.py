@@ -1,8 +1,12 @@
 
 from typing import Tuple, List
-
+import pretty_midi
 from miditok import MIDITokenizer, TokSequence
-
+import os
+import matplotlib.pyplot as plt
+import numpy as np
+from music21 import converter, chord, note
+import pandas as pd
 
 def tse(tokens: List[int], tokenizer: MIDITokenizer) -> Tuple[float, float, float, float, float]:
     r"""Checks if a sequence of tokens is made of good token types
@@ -103,3 +107,143 @@ def tse(tokens: List[int], tokenizer: MIDITokenizer) -> Tuple[float, float, floa
         previous_type = event_type
 
     return tuple(map(lambda err: err / nb_tok_predicted, (err_type, err_time, err_ndup, err_nnon, err_nnof)))
+
+
+def analyze_midi_file(midi_file_path):
+    # Wczytaj plik MIDI
+    midi_data = pretty_midi.PrettyMIDI(midi_file_path)
+    results = {}
+    # Pobierz zmiany tempa
+    tempo_change_times, tempi = midi_data.get_tempo_changes()
+    results['tempo_changes'] = {'time': tempo_change_times, 'tempo': tempi}
+    # Pobierz czas zakończenia pliku MIDI
+    results['end_time'] = midi_data.get_end_time() 
+    # Przybliżony szacunek tempa
+    estimated_tempos, probabilities = midi_data.estimate_tempi()
+    results['estimated_tempos'] = {'tempo': estimated_tempos, 'probabilities': probabilities}
+    # Szacunek tempa
+    results['estimated_tempo'] = midi_data.estimate_tempo()
+    # Pobierz bicie
+    results['beats'] = midi_data.get_beats()
+    # Pobierz początek taktu
+    results['beat_start'] = midi_data.estimate_beat_start()
+    # Pobierz akcenty metryczne
+    results['downbeats'] = midi_data.get_downbeats()
+    # Pobierz wszystkie onsety
+    results['onsets'] = midi_data.get_onsets()
+    results['file_size'] = os.path.getsize(midi_file_path)
+    
+    return results
+
+def save_results_to_file(results, output_file_path):
+    with open(output_file_path, 'w') as file:
+        for key, value in results.items():
+            file.write(f"{key}: {value}\n")
+
+def analyze_pitch(midi_file_path):
+    midi_file = pretty_midi.PrettyMIDI(midi_file_path)
+    notes = [note for instrument in midi_file.instruments for note in instrument.notes]
+
+    # Pitch Analysis
+    pitches = [note.pitch for note in notes]
+    pitch_range = (min(pitches), max(pitches))
+    pitch_histogram = np.histogram(pitches, bins=np.arange(21, 109))  # MIDI pitches range from 21 to 108
+
+    return pitch_range, pitch_histogram 
+
+def analyze_rhythm(midi_file_path):
+    midi_file = pretty_midi.PrettyMIDI(midi_file_path)
+    notes = [note for instrument in midi_file.instruments for note in instrument.notes]
+    
+    # Rhythm Analysis
+    onsets = [note.start for note in notes]
+    durations = [note.end - note.start for note in notes]
+    ioi = np.diff(sorted(onsets))
+    duration_histogram = np.histogram(durations, bins=50)
+    
+    return ioi, durations, duration_histogram
+
+def analyze_velocities(midi_file_path):
+    midi_file = pretty_midi.PrettyMIDI(midi_file_path)
+    notes = [note for instrument in midi_file.instruments for note in instrument.notes]
+    
+    # Velocity Analysis
+    velocities = [note.velocity for note in notes]
+    velocity_range = (min(velocities), max(velocities))
+    velocity_histogram = np.histogram(velocities, bins=np.arange(0, 128))
+    
+    return velocity_range, velocity_histogram
+
+def analyze_note_progression(file_path):
+    stream = converter.parse(file_path)
+    notes = [element for element in stream.flat.notes if isinstance(element, note.Note)]
+    
+    num_notes = 2
+    note_seq = []
+    num_note_seq = len(notes) - 1
+    
+    if num_note_seq <= 0:
+        return 0
+    
+    counter = 0
+    for i in range(num_note_seq):
+        # Tworzenie akordu z kolejnych num_notes dźwięków
+        current_chord = chord.Chord(notes[i:i+num_notes])
+        if current_chord.isConsonant():
+            counter += 1
+    
+    return counter / num_note_seq
+        
+        
+def analyze_chord_progression(file_path):
+    stream = converter.parse(file_path)
+    chords = [element for element in stream.flat.notes if isinstance(element, chord.Chord)]
+    
+    num_chords = len(chords)
+    counter = 0
+    for i in range(len(chords)):
+        if chords[i].isConsonant():
+            counter += 1
+            
+    return counter / num_chords
+
+def plot(pitch_histogram, duration_histogram, velocity_histogram):
+    # Ensure bins are properly generated for histograms
+    plt.figure(figsize=(10, 6))
+    plt.hist(pitch_histogram[1][:-1], bins=pitch_histogram[1], weights=pitch_histogram[0])
+    plt.title("Pitch Histogram")
+    plt.xlabel("Pitch")
+    plt.ylabel("Frequency")
+    # plt.show()
+
+    
+    plt.figure(figsize=(10, 6))
+    plt.hist(duration_histogram[1][:-1], bins=duration_histogram[1], weights=duration_histogram[0])
+    plt.title("Duration Histogram")
+    plt.xlabel("Duration")
+    plt.ylabel("Frequency")
+    # plt.show()
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(velocity_histogram[1][:-1], bins=velocity_histogram[1], weights=velocity_histogram[0])
+    plt.title("Velocity Histogram")
+    plt.xlabel("Velocity")
+    plt.ylabel("Frequency")
+    # plt.show()
+    
+def print_data(pitch_range, velocity_range, ioi, durations, harmonic_chords, harmonic_notes):
+    print("Pitch Range:", pitch_range)
+    print("Velocity Range:", velocity_range)
+    # print("Inter-Onset Intervals (IOI):", ioi)
+    # print("Durations:", durations)
+    print("Hormony in chords: ", harmonic_chords)
+    print("Harmony in notes: ", harmonic_notes)
+    
+def create_dataframe(title, pitch_range, velocity_range, ioi, durations, harmonic_chords, harmonic_notes):
+    data = {
+        "Metric": ["Title", "Pitch Range", "Velocity Range", "Harmonic Chords", "Harmonic Notes"],
+        "Value": [title, pitch_range, velocity_range, harmonic_chords, harmonic_notes]
+    }
+    df = pd.DataFrame(data)
+    return df
+    

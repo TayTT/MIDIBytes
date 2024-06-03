@@ -46,7 +46,7 @@ def check_values(text):
     # Sprawdzenie, czy wartości mieszczą się w typowych zakresach
     for value in values:
         if value > 312:
-            print(f"Warning: Token value {value} is above 200.")
+            print(f"Warning: Token value {value} is above 312.")
     
     return text
     

@@ -1,4 +1,4 @@
-err_type = 0.002717391304347826,
+err_type = 0.0,
  err_time = 0.0,
  err_ndup = 0.0,
  err_nnon = 0.0,

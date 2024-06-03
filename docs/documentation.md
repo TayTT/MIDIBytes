@@ -48,6 +48,8 @@ Poniżej przedstawione są wymagania systemowe:
 - transformers
 - prettymidi
 - wandb
+- music21
+- matplotlib
 
 ## Architektura systemu
 
@@ -92,7 +94,7 @@ python train.py config/train_tokenizer.py
 W pliku *model_training\config\train_tokenizer.py* znajduje się konfiguracja parametrów uczenia, którą można zmienić w ramach trenowania
 
 4. **Ewaluacja modelu**
-Ocena modelu polega na obliczeniu błędów TSE (token syntax error) [1] oraz ocenie subiektywnej po odsłuchu wygenerowanego nagrania. By uruchomić skrypt należy uruchomić poniższą komendę:
+Ocena modelu polega na obliczeniu błędów TSE (token syntax error) [1], zakresu wysokości dźwieku, zakresu dynamiki utworu, współczynników harmonii oraz na ocenie subiektywnej po odsłuchu wygenerowanego nagrania. By uruchomić skrypt należy uruchomić poniższą komendę:
 
 ```sh
 python models\run_evaluation.py

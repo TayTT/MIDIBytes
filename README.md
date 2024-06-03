@@ -1,8 +1,6 @@
-MIDIBytes
+# MIDIBytes
 
-# Badanie wpływu różnych metod tokenizacji na jakość muzyki generowanej za pomocą modeli symbolicznych
-
-## Dokumentacja techniczna
+## Badanie wpływu różnych metod tokenizacji na jakość muzyki generowanej za pomocą modeli symbolicznych
 
 ### Wyszukiwanie informacji muzycznych
 
@@ -11,6 +9,19 @@ Kamil Jabłoński, Marlena Podleśna, Barbara Bańczyk
 
 ---
 
+## Spis treści
+1. [Wprowadzenie](#wprowadzenie)
+   - [Cel projektu](#cel-projektu)
+   - [Zakres](#zakres)
+   - [Wymagania](#wymagania)
+2. [Architektura systemu](#architektura-systemu)
+   - [Opis modułów](#opis-modułów)
+3. [Instalacja i konfiguracja](#instalacja-i-konfiguracja)
+4. [Użycie](#użycie)
+5. [Struktura katalogów i plików](#struktura-katalogów-i-plików)
+6. [Testowanie](#testowanie)
+
+---
 
 ## Wprowadzenie
 
@@ -130,7 +141,7 @@ Po zainstalowaniu VSCode, warto zainstalować następujące rozszerzenia:
 By pobrać kod źródłowy sklonuj repozytorium projektu przy użyciu komendy:
 
 ```sh
-git clone [<url-repozytorium>](https://github.com/TayTT/MIDIBytes.git)
+git clone https://github.com/TayTT/MIDIBytes.git
 ```
 
 #### 5. Docker
@@ -139,8 +150,11 @@ Docker umożliwia tworzenie i uruchamianie aplikacji w kontenerach. Możesz pobr
 Po zainstalowaniu programu Docker, uruchom go i upewnij się, że działa poprawnie.
 
 #### 6. Konfiguracja aplikacji
-By skonfigurować aplikację należy przejść do folderu src, a następnie uruchomić komendę:
+By skonfigurować aplikację należy przejść do folderu src, a następnie uruchomić komendy:
 
+```sh
+docker compose build
+```
 ```sh
 docker compose up
 ```
@@ -152,12 +166,20 @@ Aplikacja pozwala na ocenę jakości generacji muzyki dla 6 tokenizatorów. Aby 
 **Uruchamianie aplikajci przy użyciu Docker'a**
 1. Uruchomić środowisko Docker, np. aplikację desktopową Docker.
 2. W folderze src uruchomić komendę docker compose build:
-	``` cd src ```
-	``` docker compose build ```
-3. Po zbudowaniu kontenera:
-	``` docker compose up ```
-4. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
-	``` localhost:8501```
+	```sh
+	 cd src
+  	```
+	```sh
+	 docker compose build
+  	```
+4. Po zbudowaniu kontenera:
+	```sh
+	  docker compose up
+	 ```
+5. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
+	```sh
+	 localhost:8501
+	 ```
 
 ### Korzystanie z modułu do trenowania modeli
 

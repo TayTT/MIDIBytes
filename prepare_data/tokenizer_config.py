@@ -4,7 +4,7 @@ from symusic import Score
 import miditok
 from pydub import AudioSegment
 from prep_config import TOKENS_DIR, MIDI_FROM_TOKENS_DIR, DEFAULT_TOKENIZER
-from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MIDITokenizer, TokSequence
+from miditok import REMI, MIDILike, TSD, Structured, CPWord, MuMIDI, MMM, Octuple, TokenizerConfig, MusicTokenizer, TokSequence
 # from miditok.pytorch_data import DatasetTok, DataCollator #DatasetMIDI, DataCollator, split_midis_for_training
 from torch.utils.data import DataLoader
 import json
@@ -25,7 +25,7 @@ Class has two key components: tokenizer and configuration and some methods:
 
 class TokenizerConfigBuilder:
     def __init__(self):
-        self.tokenizer: MIDITokenizer = DEFAULT_TOKENIZER
+        self.tokenizer: MusicTokenizer = DEFAULT_TOKENIZER
         self.configuration: TokenizerConfig = TokenizerConfig(
             pitch_range = (21, 109), 
             num_velocities = 32,  
@@ -75,11 +75,11 @@ class TokenizerConfigBuilder:
         else:
             raise ValueError("Unknown tokenizer")  
     
-    def generate_tokens(self, midi_scores: list, BPE: bool = False, tokenizer_name="", path = None) -> TokSequence:
+    def generate_tokens(self, midi_scores: list, tokenizer_name="", path = None) -> TokSequence:
         
         tokens = []
         for i, midi_file in enumerate(midi_scores):
-            token = self.tokenizer.midi_to_tokens(midi_file, apply_bpe=BPE)
+            token = self.tokenizer.midi_to_tokens(midi_file)
             
             tokens.append(token)
             if path != None:

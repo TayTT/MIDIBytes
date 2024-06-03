@@ -6,6 +6,7 @@ Generating the projects path names and default configuration for tokenizers
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "."))
 DATA_DIR = os.path.join(ROOT_DIR, "./data")
 MIDI_DIR = os.path.join(DATA_DIR, "midi//maestro-v3.0.0")
+TOKENIZERS_DIR = os.path.join(DATA_DIR, "tokenizers")
 TOKENS_DIR = os.path.join(DATA_DIR, "tokens")
 MIDI_FROM_TOKENS_DIR = os.path.join(DATA_DIR, "midi_from_tokens")
 AUDIO_INPUT_DIR = os.path.join(DATA_DIR, "audio_in")

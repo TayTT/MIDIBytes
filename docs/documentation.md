@@ -83,13 +83,13 @@ Moduł aplikacji umożliwia użytkownikom wybór tokenizatorów, wgrywanie plik�
 
 Moduł ten obejmuje następujące kroki:
 
-**Pobieranie datasetu:** Skrypt fetch_maestro.py pobiera dataset Maestro w formacie MIDI i tworzy strukturę folderów do przechowywania danych.
+1. **Pobieranie datasetu:** Skrypt fetch_maestro.py pobiera dataset Maestro w formacie MIDI i tworzy strukturę folderów do przechowywania danych.
 
-**Przygotowanie danych:** Skrypt prep_data.py konwertuje dane MIDI do plików tekstowych (.txt) za pomocą tokenizatorów, zapisując je w odpowiednim katalogu.
+2. **Przygotowanie danych:** Skrypt prep_data.py konwertuje dane MIDI do plików tekstowych (.txt) za pomocą tokenizatorów, zapisując je w odpowiednim katalogu.
 
-**Trenowanie modelu:** Skrypty w folderze model_training przygotowują dane, konfigurują parametry i uruchamiają trenowanie modelu, z możliwością logowania postępów.
+3. **Trenowanie modelu:** Skrypty w folderze model_training przygotowują dane, konfigurują parametry i uruchamiają trenowanie modelu, z możliwością logowania postępów.
 
-**Ewaluacja modelu:** Skrypt run_evaluation.py ocenia model poprzez obliczenie błędów, analizę dźwięków i ocenę subiektywną wygenerowanej muzyki, zapisując wyniki w katalogu data\generated_data.
+4. **Ewaluacja modelu:** Skrypt run_evaluation.py ocenia model poprzez obliczenie błędów, analizę dźwięków i ocenę subiektywną wygenerowanej muzyki, zapisując wyniki w katalogu data\generated_data.
 
 Moduł zapewnia pełny cykl pracy od pobierania danych po trenowanie i ewaluację modeli generujących muzykę.
 

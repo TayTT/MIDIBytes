@@ -41,6 +41,7 @@ Poniżej przedstawione są wymagania systemowe:
 - symusic 0.4.3
 - torch 2.2.1
 - pydub 0.25.1
+
 - fluidsynth 0.2
 - Docker
 - pytorch
@@ -56,7 +57,53 @@ Poniżej przedstawione są wymagania systemowe:
 Aplikacja znajduje się na branchu **main** natomiast przygotowanie danych oraz trenowanie na branchu **nano-prep**.
 
 ### Opis modułów
-#### Moduł z brancha nano-prep
+#### Moduł aplikacji
+### Ogólny opis modułu aplikacji
+
+Moduł aplikacji umożliwia użytkownikom wybór tokenizatorów, wgrywanie plików MIDI, określenie długości sekwencji startowej do generacji oraz generowanie i ocenę wynikó przy pomocy prostego i intuicyjnego interfejsu. Proces składa się z kilku kroków:
+
+1. **Wybór tokenizatorów**
+   - Użytkownik wybiera z listy tokenizatory, które mają być użyte. Można wybrać co najmniej jeden, maksymalnie wszystkie.
+   - Po dokonaniu wyboru użytkownik klika "Continue".
+
+2. **Wgrywanie plików MIDI**
+   - Użytkownik wgrywa jeden plik MIDI.
+   - Aplikacja akceptuje tylko pliki typu MIDI.
+
+3. **Określenie procentowej wartości użycia pliku**
+   - Użytkownik określa, ile procentowo z wgrywanego pliku zostanie wykorzystane jako początek sekwencji MIDI do modelu generatywnego.
+   - Pasek procentowy umożliwia łatwe ustawienie tej wartości.
+
+4. **Generowanie i ewaluacja wyników**
+   - Okienko rozwijalne wyświetla logi z działania aplikacji, pozwalając użytkownikowi śledzić postęp.
+   - Po zakończeniu generowania wyników użytkownik może odtworzyć pliki, pobrać je oraz zobaczyć tabelę z metrykami.
+   - Jeśli użytkownik chce wygenerować nową próbkę, klika przycisk "start again".
+
+#### Moduł treningu i przygotowania modeli
+
+Moduł ten obejmuje następujące kroki:
+
+**Pobieranie datasetu:** Skrypt fetch_maestro.py pobiera dataset Maestro w formacie MIDI i tworzy strukturę folderów do przechowywania danych.
+
+**Przygotowanie danych:** Skrypt prep_data.py konwertuje dane MIDI do plików tekstowych (.txt) za pomocą tokenizatorów, zapisując je w odpowiednim katalogu.
+
+**Trenowanie modelu:** Skrypty w folderze model_training przygotowują dane, konfigurują parametry i uruchamiają trenowanie modelu, z możliwością logowania postępów.
+
+**Ewaluacja modelu:** Skrypt run_evaluation.py ocenia model poprzez obliczenie błędów, analizę dźwięków i ocenę subiektywną wygenerowanej muzyki, zapisując wyniki w katalogu data\generated_data.
+
+Moduł zapewnia pełny cykl pracy od pobierania danych po trenowanie i ewaluację modeli generujących muzykę.
+
+
+## Instalacja i konfiguracja
+
+## Użycie
+
+### Moduł aplikacji
+
+
+
+### Moduł treningu i przygotowania modeli
+
 1. **Pobieranie datasetu i tworzenie struktury folderów**
 
 Poniższa komenda umożliwia pobranie datasetu Maestro i stwarza strukturę folderów.
@@ -104,15 +151,5 @@ By zmienić parametry oceny należy edytować stałe znajdujące się w pliku *m
 
 Wyniki generacji wyświetlane są na ekran oraz zapisane do pliku w ścieżce *data\generated_data*.
 
-#### Moduł z brancha main
-
-
-## Instalacja i konfiguracja
-
-## Użycie
-
-## Struktura katalogów i plików
-
-## Testowanie
 
 [1] "Impact of time and note duration tokenizations on deep learning symbolic music modeling" by Nathan Fradet.

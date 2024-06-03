@@ -150,8 +150,11 @@ Docker umożliwia tworzenie i uruchamianie aplikacji w kontenerach. Możesz pobr
 Po zainstalowaniu programu Docker, uruchom go i upewnij się, że działa poprawnie.
 
 #### 6. Konfiguracja aplikacji
-By skonfigurować aplikację należy przejść do folderu src, a następnie uruchomić komendę:
+By skonfigurować aplikację należy przejść do folderu src, a następnie uruchomić komendy:
 
+```sh
+docker compose build
+```
 ```sh
 docker compose up
 ```
@@ -163,12 +166,16 @@ Aplikacja pozwala na ocenę jakości generacji muzyki dla 6 tokenizatorów. Aby 
 **Uruchamianie aplikajci przy użyciu Docker'a**
 1. Uruchomić środowisko Docker, np. aplikację desktopową Docker.
 2. W folderze src uruchomić komendę docker compose build:
-	``` cd src ```
-	``` docker compose build ```
-3. Po zbudowaniu kontenera:
-	``` docker compose up ```
-4. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
-	``` localhost:8501```
+	```sh
+	 cd src ```
+	```sh
+	 docker compose build ```
+4. Po zbudowaniu kontenera:
+	```sh
+	  docker compose up ```
+5. Aplikacja dostępna jest w przeglądarce internetowej pod adresem:
+	```sh
+	 localhost:8501```
 
 ### Korzystanie z modułu do trenowania modeli
 

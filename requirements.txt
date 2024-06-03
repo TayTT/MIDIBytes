@@ -1,0 +1,15 @@
+fluidsynth==0.2
+midi2audio==0.1.1
+miditok==3.0.3
+pathlib==1.0.1
+pydub==0.25.1
+streamlit
+symusic==0.4.3
+torch==2.2.1
+pretty_midi
+python==3.12
+Docker
+numpy
+transformers
+pretty_midi
+wandb

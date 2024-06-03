@@ -6,6 +6,9 @@ from generation_config import NUMBER_OF_TOKENS, PROMPT_DIR, TOKENIZER, PROMPT_FI
 
 OUTPUT_DIR = PROMPT_DIR
 
+tokenizer_name = TOKENIZER.strip("_BPE")
+is_bpe = True if "_BPE" in TOKENIZER else False
+ 
 midi = MidiReader(PROMPT_DIR)
 midi_list, midi_scores = midi.read_midi_files()
 

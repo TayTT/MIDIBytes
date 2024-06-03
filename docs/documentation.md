@@ -33,24 +33,25 @@ Projekt obejmuje implementację różnych metod tokenizacji, porównanie wpływu
 
 ### Wymagania
 Poniżej przedstawione są wymagania systemowe:
-- Python 3.12
-- miditok 3.0.3
-- streamlit
-- midi2audio 0.1.1
-- pathlib 1.0.1
-- symusic 0.4.3
-- torch 2.2.1
-- pydub 0.25.1
 
-- fluidsynth 0.2
-- Docker
-- pytorch
-- numpy
-- transformers
-- prettymidi
-- wandb
-- music21
-- matplotlib
+- Python 3.12  
+- miditok 3.0.3  
+- streamlit  
+- midi2audio 0.1.1  
+- pathlib 1.0.1  
+- symusic 0.4.3  
+- torch 2.2.1  
+- pydub 0.25.1  
+
+- fluidsynth 0.2  
+- Docker  
+- pytorch  
+- numpy  
+- transformers  
+- prettymidi  
+- wandb  
+- music21  
+- matplotlib  
 
 ## Architektura systemu
 

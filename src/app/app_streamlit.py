@@ -155,18 +155,7 @@ def main():
         list_t = st.session_state.selected_tokenizers
         with main_container.container():
             st.subheader("Step 2")
-            st.write("Enter start sequence")
-            for tokenizer_name in list_t:
-                if not list_t[-1:] == [tokenizer_name]:
-                    st.text_input(label = f"...for {tokenizer_name}",
-                        label_visibility = "visible",
-                        key = f"prompt_{tokenizer_name}")
-                else:
-                    st.text_input(label = f"...for {tokenizer_name}",
-                        label_visibility = "visible",
-                        key = f"prompt_{tokenizer_name}",
-                        on_change = nextPage)
-            st.write("OR")
+            st.write("Provide a start sequence")
             file = st.file_uploader(label = "Upload midi file", 
                 label_visibility = "collapsed",
                 type = "midi")
@@ -186,7 +175,8 @@ def main():
         with main_container.container():
             st.subheader("Step 3")
             if 'file_uploaded' in st.session_state:
-                value = st.slider("Percentage of provided sample to be used as a prompt", 0, 100, 0, step = 10)
+                value = st.slider("Percentage of provided sample to be used as a prompt", 0, 100, 1, step = 10)
+                if value == 0: value = 1
                 _continue = st.button("Continue")
                 if _continue:
                     for tokenizer in list_t:
@@ -195,13 +185,6 @@ def main():
                         st.session_state.prompts.append([prompt, total_len, gen_len])
                     nextPage()
                     st.rerun()
-            else:
-                length = st.text_input(label = "How many tokens do You want to generate?",
-                        label_visibility = "visible")
-                if len(length) > 0:
-                    for tokenizer in list_t:
-                        input_sequence = st.session_state[f'prompt_{tokenizer}']
-                        st.session_state.prompts.append([input_sequence, len(input_sequence + length), length])
     
     # final page
     elif st.session_state.page == 3:
@@ -221,6 +204,7 @@ def main():
                 logs.write(f"The total length is {data[1]}, prompt length is {data[1] - data[2]}")
                 logs.write(f"Model needs to generate {data[2]} elements...")
                 elapsed, tokens, midi_path = sample(tokenizer_name, data[0], data[2])
+                elapsed = "{:.2f}".format(elapsed)
                 df = analyze(midi_path)
                 df_main = pd.concat([df_main, df], ignore_index=True)
                 logs.write(f"Done generating for {tokenizer_name}, took {elapsed}s")

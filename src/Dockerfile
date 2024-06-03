@@ -10,7 +10,7 @@ WORKDIR /src/data/model
 
 RUN apt update --fix-missing && apt upgrade -y && apt install wget -y && apt install unzip -y
 
-RUN wget -O model.zip "https://www.dropbox.com/scl/fi/hknnj6xk1jjb3v0it5t63/model.zip?rlkey=fulgjx73e3n1rnzr7d34f5kkt&st=9hgg7d5o"
+RUN wget -O model.zip "https://www.dropbox.com/scl/fi/7rwzumwkv0ssmxwcwmbl5/model2.zip?rlkey=1m3aomh34vbgduhznvqwyn9jf&st=elvwuoj4"
 
 RUN unzip -q model.zip && rm model.zip
 
